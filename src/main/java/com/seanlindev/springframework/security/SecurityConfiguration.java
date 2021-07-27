@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.configuration;
+package com.seanlindev.springframework.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

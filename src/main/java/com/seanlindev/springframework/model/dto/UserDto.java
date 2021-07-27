@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.shared.dto;
+package com.seanlindev.springframework.model.dto;
 
 public class UserDto {
     private Long id;

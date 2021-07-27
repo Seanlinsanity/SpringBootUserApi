@@ -3,7 +3,7 @@ package com.seanlindev.springframework.controllers;
 import com.seanlindev.springframework.model.request.UserDetailsRequestModel;
 import com.seanlindev.springframework.model.response.UserRest;
 import com.seanlindev.springframework.services.UserService;
-import com.seanlindev.springframework.shared.dto.UserDto;
+import com.seanlindev.springframework.model.dto.UserDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
