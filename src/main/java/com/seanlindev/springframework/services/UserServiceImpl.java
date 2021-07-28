@@ -1,8 +1,8 @@
 package com.seanlindev.springframework.services;
 
-import com.seanlindev.springframework.entities.UserEntity;
+import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.UserRepository;
-import com.seanlindev.springframework.model.dto.UserDto;
+import com.seanlindev.springframework.api.dto.UserDto;
 import com.seanlindev.springframework.shared.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.User;
@@ -41,6 +41,16 @@ public class UserServiceImpl implements UserService {
         UserDto savedUser = new UserDto();
         BeanUtils.copyProperties(savedUserEntity, savedUser);
         return savedUser;
+    }
+
+    @Override
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+        return userDto;
     }
 
     @Override

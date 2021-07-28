@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.model.response;
+package com.seanlindev.springframework.api.response;
 
 public class UserRest {
     private String userId;

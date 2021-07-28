@@ -1,7 +1,9 @@
 package com.seanlindev.springframework.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.seanlindev.springframework.model.request.UserLoginRequestModel;
+import com.seanlindev.springframework.api.request.UserLoginRequestModel;
+import com.seanlindev.springframework.services.UserService;
+import com.seanlindev.springframework.shared.SpringApplicationContext;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,6 +51,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        response.addHeader("UserId", userService.getUser(userName).getUserId());
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
     }
 }

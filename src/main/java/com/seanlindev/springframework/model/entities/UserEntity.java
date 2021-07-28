@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.entities;
+package com.seanlindev.springframework.model.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,8 +1,9 @@
 package com.seanlindev.springframework.services;
 
-import com.seanlindev.springframework.model.dto.UserDto;
+import com.seanlindev.springframework.api.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
     UserDto createUser(UserDto user);
+    UserDto getUser(String email);
 }

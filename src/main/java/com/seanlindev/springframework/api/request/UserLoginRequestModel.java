@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.model.request;
+package com.seanlindev.springframework.api.request;
 
 public class UserLoginRequestModel {
     private String email;
