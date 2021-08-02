@@ -8,6 +8,9 @@ import com.seanlindev.springframework.repositories.UserRepository;
 import com.seanlindev.springframework.api.dto.UserDto;
 import com.seanlindev.springframework.shared.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -93,5 +98,19 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null)
             throw new UserServiceException(ErrorMessageType.NO_RECORD_FOUND.getErrorMessage());
         userRepository.delete(userEntity);
+    }
+
+    @Override
+    public List<UserDto> getUsers(int page, int limit) {
+        if (page > 0)
+            page = page-1;
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Pageable pageable = pageRequest.toOptional().get();
+        Page<UserEntity> usersPage = userRepository.findAll(pageable);
+        return usersPage.get().map(userEntity -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userEntity, userDto);
+            return userDto;
+        }).collect(Collectors.toList());
     }
 }

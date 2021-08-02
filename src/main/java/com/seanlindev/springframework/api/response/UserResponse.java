@@ -1,6 +1,6 @@
 package com.seanlindev.springframework.api.response;
 
-public class UserRest {
+public class UserResponse {
     private String userId;
     private String firstName;
     private String lastName;
