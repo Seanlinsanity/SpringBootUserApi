@@ -1,7 +1,10 @@
 package com.seanlindev.springframework.controllers;
 
+import com.seanlindev.springframework.api.request.RequestOperationName;
 import com.seanlindev.springframework.api.request.UserDetailsRequestModel;
 import com.seanlindev.springframework.api.response.ErrorMessageType;
+import com.seanlindev.springframework.api.response.OperationStatusModel;
+import com.seanlindev.springframework.api.response.RequestOperationStatus;
 import com.seanlindev.springframework.api.response.UserRest;
 import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.services.UserService;
@@ -22,7 +25,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(path="/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path="/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public UserRest getUser(@PathVariable String id) {
         UserRest userRest = new UserRest();
         UserDto userDto = userService.getUserByUserId(id);
@@ -31,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping(
-            consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
-            produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
         if (userDetails.getFirstName().isEmpty()) throw new UserServiceException(ErrorMessageType.MISSING_REQUIRED_FIELD.getErrorMessage());
 
@@ -46,13 +49,28 @@ public class UserController {
         return userRest;
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "update user here...";
+    @PutMapping(path="/{id}",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
+        if (userDetails.getFirstName().isEmpty()) throw new UserServiceException(ErrorMessageType.MISSING_REQUIRED_FIELD.getErrorMessage());
+
+        UserRest userRest = new UserRest();
+        UserDto userDto = new UserDto();
+
+        BeanUtils.copyProperties(userDetails, userDto);
+        UserDto createdUser = userService.updateUserByUserId(id, userDto);
+        BeanUtils.copyProperties(createdUser, userRest);
+
+        return userRest;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user here...";
+    @DeleteMapping(path="/{id}")
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel statusModel = new OperationStatusModel();
+        statusModel.setOperationName(RequestOperationName.DELETE.name());
+        userService.deleteUserByUserId(id);
+        statusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        return statusModel;
     }
 }
