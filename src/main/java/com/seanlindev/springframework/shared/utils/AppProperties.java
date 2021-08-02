@@ -1,4 +1,4 @@
-package com.seanlindev.springframework.security;
+package com.seanlindev.springframework.shared.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

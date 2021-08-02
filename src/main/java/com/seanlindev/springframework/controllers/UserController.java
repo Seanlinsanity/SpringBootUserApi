@@ -1,7 +1,9 @@
 package com.seanlindev.springframework.controllers;
 
 import com.seanlindev.springframework.api.request.UserDetailsRequestModel;
+import com.seanlindev.springframework.api.response.ErrorMessageType;
 import com.seanlindev.springframework.api.response.UserRest;
+import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.services.UserService;
 import com.seanlindev.springframework.api.dto.UserDto;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +33,9 @@ public class UserController {
     @PostMapping(
             consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
             produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
+        if (userDetails.getFirstName().isEmpty()) throw new UserServiceException(ErrorMessageType.MISSING_REQUIRED_FIELD.getErrorMessage());
+
         UserRest userRest = new UserRest();
         UserDto userDto = new UserDto();
 

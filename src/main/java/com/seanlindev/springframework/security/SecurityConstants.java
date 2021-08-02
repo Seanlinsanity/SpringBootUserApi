@@ -1,6 +1,7 @@
 package com.seanlindev.springframework.security;
 
 import com.seanlindev.springframework.shared.SpringApplicationContext;
+import com.seanlindev.springframework.shared.utils.AppProperties;
 
 public class SecurityConstants {
     public static final long EXPIRATION_TIME = 864000000;
