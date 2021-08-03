@@ -1,12 +1,13 @@
 package com.seanlindev.springframework.services;
 
-import com.seanlindev.springframework.api.response.ErrorMessage;
+import com.seanlindev.springframework.api.dto.AddressDTO;
 import com.seanlindev.springframework.api.response.ErrorMessageType;
 import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.UserRepository;
 import com.seanlindev.springframework.api.dto.UserDto;
-import com.seanlindev.springframework.shared.utils.UserUtils;
+import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,14 +25,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
-    UserUtils userUtils;
+    PublicIdGenerator publicIdGenerator;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserServiceImpl(UserRepository userRepository,
-                           UserUtils userUtils,
+                           PublicIdGenerator publicIdGenerator,
                            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.userUtils = userUtils;
+        this.publicIdGenerator = publicIdGenerator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -39,14 +40,19 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()) != null)
             throw new RuntimeException("Record already exists");
+        List<AddressDTO> addresses = user.getAddresses().stream().map(addressDTO -> {
+            addressDTO.setAddressId(publicIdGenerator.generateAddressId(30));
+            addressDTO.setUserDetails(user);
+            return addressDTO;
+        }).collect(Collectors.toList());
+        user.setAddresses(addresses);
 
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
-        userEntity.setUserId(userUtils.generateUserId(30));
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+        userEntity.setUserId(publicIdGenerator.generateUserId(30));
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserEntity savedUserEntity = userRepository.save(userEntity);
-        UserDto savedUser = new UserDto();
-        BeanUtils.copyProperties(savedUserEntity, savedUser);
+        UserDto savedUser = modelMapper.map(savedUserEntity, UserDto.class);
         return savedUser;
     }
 

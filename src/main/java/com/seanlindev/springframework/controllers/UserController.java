@@ -9,6 +9,7 @@ import com.seanlindev.springframework.api.response.UserResponse;
 import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.services.UserService;
 import com.seanlindev.springframework.api.dto.UserDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,13 +43,11 @@ public class UserController {
     public UserResponse createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
         if (userDetails.getFirstName().isEmpty()) throw new UserServiceException(ErrorMessageType.MISSING_REQUIRED_FIELD.getErrorMessage());
 
-        UserResponse userResponse = new UserResponse();
-        UserDto userDto = new UserDto();
+        ModelMapper modelMapper = new ModelMapper();
+        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 
-        BeanUtils.copyProperties(userDetails, userDto);
         UserDto createdUser = userService.createUser(userDto);
-        BeanUtils.copyProperties(createdUser, userResponse);
-
+        UserResponse userResponse = modelMapper.map(createdUser, UserResponse.class);
         return userResponse;
     }
 

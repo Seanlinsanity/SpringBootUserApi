@@ -1,5 +1,7 @@
 package com.seanlindev.springframework.api.dto;
 
+import java.util.List;
+
 public class UserDto {
     private Long id;
     private String userId;
@@ -10,6 +12,7 @@ public class UserDto {
     private String encryptedPassword;
     private String emailVerificationToken;
     private Boolean emailVerificationStatus = false;
+    private List<AddressDTO> addresses;
 
     public Long getId() {
         return id;
@@ -81,5 +84,13 @@ public class UserDto {
 
     public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
         this.emailVerificationStatus = emailVerificationStatus;
+    }
+
+    public List<AddressDTO> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressDTO> addresses) {
+        this.addresses = addresses;
     }
 }
