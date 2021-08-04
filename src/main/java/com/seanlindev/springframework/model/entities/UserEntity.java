@@ -28,7 +28,7 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean emailVerificationStatus = false;
 
-    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userDetails")
     private List<AddressEntity> addresses;
 
     public Long getId() {

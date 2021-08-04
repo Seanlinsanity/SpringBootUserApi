@@ -2,19 +2,19 @@ package com.seanlindev.springframework.controllers;
 
 import com.seanlindev.springframework.api.request.RequestOperationName;
 import com.seanlindev.springframework.api.request.UserDetailsRequestModel;
-import com.seanlindev.springframework.api.response.ErrorMessageType;
-import com.seanlindev.springframework.api.response.OperationStatusModel;
-import com.seanlindev.springframework.api.response.RequestOperationStatus;
-import com.seanlindev.springframework.api.response.UserResponse;
+import com.seanlindev.springframework.api.response.*;
 import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.services.UserService;
 import com.seanlindev.springframework.api.dto.UserDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,6 +87,14 @@ public class UserController {
                                              BeanUtils.copyProperties(userDto, userResponse);
                                              return userResponse;
                                          }).collect(Collectors.toList());
+    }
+
+    @GetMapping(path="/{id}/addresses", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public List<AddressResponse> getUserAddresses(@PathVariable String id) {
+        UserDto userDto = userService.getUserByUserId(id);
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<AddressResponse>>() {}.getType();
+        return modelMapper.map(userDto.getAddresses(), listType);
     }
 
 }

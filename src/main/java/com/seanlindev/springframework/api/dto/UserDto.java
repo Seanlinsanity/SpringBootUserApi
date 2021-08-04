@@ -1,5 +1,6 @@
 package com.seanlindev.springframework.api.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDto {
@@ -12,7 +13,7 @@ public class UserDto {
     private String encryptedPassword;
     private String emailVerificationToken;
     private Boolean emailVerificationStatus = false;
-    private List<AddressDTO> addresses;
+    private List<AddressDTO> addresses = new ArrayList<>();
 
     public Long getId() {
         return id;
