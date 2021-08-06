@@ -31,9 +31,9 @@ public class UserController {
 
     @GetMapping(path="/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public UserResponse getUser(@PathVariable String id) {
-        UserResponse userResponse = new UserResponse();
         UserDto userDto = userService.getUserByUserId(id);
-        BeanUtils.copyProperties(userDto, userResponse);
+        ModelMapper modelMapper = new ModelMapper();
+        UserResponse userResponse = modelMapper.map(userDto, UserResponse.class);
         return userResponse;
     }
 

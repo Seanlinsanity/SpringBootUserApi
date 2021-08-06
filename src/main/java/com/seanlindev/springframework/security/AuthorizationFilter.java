@@ -1,5 +1,7 @@
 package com.seanlindev.springframework.security;
 
+import com.seanlindev.springframework.exceptions.UserServiceException;
+import com.seanlindev.springframework.shared.utils.TokenUtil;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,8 +23,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(SecurityConstants.HEADER_STRING);
-        if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        String token = request.getHeader(SecurityConstants.HEADER_STRING);
+        if (token == null || !token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }

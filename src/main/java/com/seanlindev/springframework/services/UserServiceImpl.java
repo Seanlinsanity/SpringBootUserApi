@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()) != null)
-            throw new RuntimeException("Record already exists");
+            throw new UserServiceException("Record already exists");
         List<AddressDTO> addresses = user.getAddresses().stream().map(addressDTO -> {
             addressDTO.setAddressId(publicIdGenerator.generateAddressId(30));
             addressDTO.setUserDetails(user);
