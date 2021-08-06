@@ -2,6 +2,7 @@ package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.AddressDTO;
 import com.seanlindev.springframework.api.dto.UserDto;
+import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.model.entities.AddressEntity;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.UserRepository;
@@ -114,6 +115,16 @@ public class UserServiceImpTest {
         verify(publicIdGenerator, times(addressDTOList.size())).generateAddressId(30);
         verify(bCryptPasswordEncoder, times(1)).encode("123456");
         verify(userRepository, times(1)).save(ArgumentMatchers.any(UserEntity.class));
+    }
+
+    @Test
+    void testCreateUserServiceException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+        UserDto userDto = new UserDto();
+        userDto.setEmail("test@gmail.com");
+        assertThrows(UserServiceException.class,
+                    () -> { userService.createUser(userDto); }
+                );
     }
 
     private List<AddressDTO> getAddressDTOList() {
