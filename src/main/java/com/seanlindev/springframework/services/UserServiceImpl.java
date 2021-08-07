@@ -40,12 +40,14 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()) != null)
             throw new UserServiceException("Record already exists");
-        List<AddressDTO> addresses = user.getAddresses().stream().map(addressDTO -> {
-            addressDTO.setAddressId(publicIdGenerator.generateAddressId(30));
-            addressDTO.setUserDetails(user);
-            return addressDTO;
-        }).collect(Collectors.toList());
-        user.setAddresses(addresses);
+        if (user.getAddresses() != null) {
+            List<AddressDTO> addresses = user.getAddresses().stream().map(addressDTO -> {
+                addressDTO.setAddressId(publicIdGenerator.generateAddressId(30));
+                addressDTO.setUserDetails(user);
+                return addressDTO;
+            }).collect(Collectors.toList());
+            user.setAddresses(addresses);
+        }
 
         ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
@@ -109,7 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUsers(int page, int limit) {
         if (page > 0)
-            page = page-1;
+            page = page - 1;
         PageRequest pageRequest = PageRequest.of(page, limit);
         Pageable pageable = pageRequest.toOptional().get();
         Page<UserEntity> usersPage = userRepository.findAll(pageable);

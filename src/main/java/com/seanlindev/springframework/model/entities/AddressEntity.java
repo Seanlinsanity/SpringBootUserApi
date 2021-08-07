@@ -4,7 +4,7 @@ import com.seanlindev.springframework.api.dto.UserDto;
 
 import javax.persistence.*;
 
-@Entity(name="addresses")
+@Entity(name = "addresses")
 public class AddressEntity {
 
     @Id
@@ -30,7 +30,7 @@ public class AddressEntity {
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="users_id")
+    @JoinColumn(name = "users_id")
     private UserEntity userDetails;
 
     public long getId() {

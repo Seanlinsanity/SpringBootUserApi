@@ -92,7 +92,8 @@ public class UserServiceImpTest {
         List<AddressDTO> addressDTOList = getAddressDTOList();
         userDto.setAddresses(addressDTOList);
 
-        Type listType = new TypeToken<List<AddressEntity>>() {}.getType();
+        Type listType = new TypeToken<List<AddressEntity>>() {
+        }.getType();
         List<AddressEntity> addresses = new ModelMapper().map(addressDTOList, listType);
         userEntity.setAddresses(addresses);
 
@@ -123,8 +124,10 @@ public class UserServiceImpTest {
         UserDto userDto = new UserDto();
         userDto.setEmail("test@gmail.com");
         assertThrows(UserServiceException.class,
-                    () -> { userService.createUser(userDto); }
-                );
+                () -> {
+                    userService.createUser(userDto);
+                }
+        );
     }
 
     private List<AddressDTO> getAddressDTOList() {
