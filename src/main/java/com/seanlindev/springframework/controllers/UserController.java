@@ -85,8 +85,8 @@ public class UserController {
                                        @RequestParam(value = "limit", defaultValue = "25") int limit) {
         return userService.getUsers(page, limit).stream()
                 .map(userDto -> {
-                    UserResponse userResponse = new UserResponse();
-                    BeanUtils.copyProperties(userDto, userResponse);
+                    ModelMapper modelMapper = new ModelMapper();
+                    UserResponse userResponse = modelMapper.map(userDto, UserResponse.class);
                     return userResponse;
                 }).collect(Collectors.toList());
     }
