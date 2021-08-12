@@ -31,6 +31,12 @@ public class UserEntity {
     @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<OrderEntity> ownedOrders;
+
+    @ManyToMany(mappedBy = "participants")
+    private List<OrderEntity> participatingOrders;
+
     public Long getId() {
         return id;
     }
@@ -101,5 +107,21 @@ public class UserEntity {
 
     public void setAddresses(List<AddressEntity> addresses) {
         this.addresses = addresses;
+    }
+
+    public List<OrderEntity> getOwnedOrders() {
+        return ownedOrders;
+    }
+
+    public void setOwnedOrders(List<OrderEntity> ownedOrders) {
+        this.ownedOrders = ownedOrders;
+    }
+
+    public List<OrderEntity> getParticipatingOrders() {
+        return participatingOrders;
+    }
+
+    public void setParticipatingOrders(List<OrderEntity> participatingOrders) {
+        this.participatingOrders = participatingOrders;
     }
 }

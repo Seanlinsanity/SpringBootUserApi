@@ -1,9 +1,11 @@
 package com.seanlindev.springframework.controllers;
 
+import com.seanlindev.springframework.api.dto.OrderDto;
 import com.seanlindev.springframework.api.request.RequestOperationName;
 import com.seanlindev.springframework.api.request.UserDetailsRequestModel;
 import com.seanlindev.springframework.api.response.*;
 import com.seanlindev.springframework.exceptions.UserServiceException;
+import com.seanlindev.springframework.services.OrderService;
 import com.seanlindev.springframework.services.UserService;
 import com.seanlindev.springframework.api.dto.UserDto;
 import org.modelmapper.ModelMapper;
@@ -22,11 +24,12 @@ import java.util.stream.Collectors;
 @RequestMapping("users")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
+    private final OrderService orderService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, OrderService orderService) {
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -100,4 +103,12 @@ public class UserController {
         return modelMapper.map(userDto.getAddresses(), listType);
     }
 
+    @GetMapping("/{id}/ownedOrders")
+    public List<OrderResponse> getUserOwnedOrders(@PathVariable String id) {
+        List<OrderDto> orderDtoList = orderService.getOrdersByOwnerId(id);
+        ModelMapper modelMapper = new ModelMapper();
+        Type listType = new TypeToken<List<OrderResponse>>() {
+        }.getType();
+        return modelMapper.map(orderDtoList, listType);
+    }
 }

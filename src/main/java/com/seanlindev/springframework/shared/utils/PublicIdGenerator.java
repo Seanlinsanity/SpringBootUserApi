@@ -18,6 +18,10 @@ public class PublicIdGenerator {
         return generateRandomString(length);
     }
 
+    public String generateOrderId(int length) {
+        return generateRandomString(length);
+    }
+
     private String generateRandomString(int length) {
         StringBuilder value = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
