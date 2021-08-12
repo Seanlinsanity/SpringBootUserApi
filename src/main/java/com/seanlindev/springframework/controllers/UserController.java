@@ -103,7 +103,7 @@ public class UserController {
         return modelMapper.map(userDto.getAddresses(), listType);
     }
 
-    @GetMapping("/{id}/ownedOrders")
+    @GetMapping("/{id}/owned-orders")
     public List<OrderResponse> getUserOwnedOrders(@PathVariable String id) {
         List<OrderDto> orderDtoList = orderService.getOrdersByOwnerId(id);
         ModelMapper modelMapper = new ModelMapper();
