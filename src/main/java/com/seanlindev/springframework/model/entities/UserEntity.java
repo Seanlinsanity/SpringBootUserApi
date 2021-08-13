@@ -1,6 +1,7 @@
 package com.seanlindev.springframework.model.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "users")
@@ -36,6 +37,12 @@ public class UserEntity {
 
     @ManyToMany(mappedBy = "participants")
     private List<OrderEntity> participatingOrders;
+
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+               joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<RoleEntity> roles;
 
     public Long getId() {
         return id;
@@ -123,5 +130,13 @@ public class UserEntity {
 
     public void setParticipatingOrders(List<OrderEntity> participatingOrders) {
         this.participatingOrders = participatingOrders;
+    }
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
     }
 }
