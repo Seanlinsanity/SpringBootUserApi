@@ -8,4 +8,5 @@ public interface OrderService {
     OrderDto createOrder(OrderDto order);
     List<OrderDto> getOrdersByOwnerId(String ownerId);
     OrderDto findByOrderId(String orderId);
+    OrderDto updateOrderParticipant(String orderId, String userId, Integer quantity);
 }

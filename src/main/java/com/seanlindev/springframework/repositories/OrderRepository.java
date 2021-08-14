@@ -1,10 +1,12 @@
 package com.seanlindev.springframework.repositories;
 
 import com.seanlindev.springframework.model.entities.OrderEntity;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +14,16 @@ import java.util.List;
 public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
     @Query(value = "select * from orders o where o.owner_id = :ownerId", nativeQuery = true)
     List<OrderEntity> findAllByOwnerId(@Param("ownerId") Long ownerId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into order_participant (order_id, user_id) values (:orderId, :userId)", nativeQuery = true)
+    int addNewParticipantForOrder(@Param("orderId") Long orderId, @Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update orders o set quantity = :quantity where o.id = :orderId", nativeQuery = true)
+    void updateOrderQuantity(@Param("orderId") Long orderId, @Param("quantity") Integer quantity);
 
     OrderEntity findByOrderId(String orderId);
 }

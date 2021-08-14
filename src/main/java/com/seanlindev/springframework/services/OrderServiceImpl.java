@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -74,4 +75,26 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(orderEntity, OrderDto.class);
     }
 
+    @Transactional
+    @Override
+    public OrderDto updateOrderParticipant(String orderId, String userId, Integer quantity) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new RuntimeException("Order not found: " + orderId);
+        }
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) {
+            throw new RuntimeException("Participant not found " + userId);
+        }
+
+        Integer newQuantity = orderEntity.getQuantity() + quantity;
+        int result = orderRepository.addNewParticipantForOrder(orderEntity.getId(), userEntity.getId());
+        System.out.println("add new participant result: " + result);
+        orderRepository.updateOrderQuantity(orderEntity.getId(), newQuantity);
+
+        ModelMapper modelMapper = new ModelMapper();
+        OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+        orderDto.setQuantity(newQuantity);
+        return orderDto;
+    }
 }
