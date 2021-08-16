@@ -1,8 +1,7 @@
 package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
-import com.seanlindev.springframework.api.dto.UserDto;
-import com.seanlindev.springframework.api.response.AddressResponse;
+import com.seanlindev.springframework.api.dto.OrderParticipantDto;
 import com.seanlindev.springframework.model.entities.OrderEntity;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.OrderRepository;
@@ -77,17 +76,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDto updateOrderParticipant(String orderId, String userId, Integer quantity) {
-        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+    public OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderParticipantDto.getOrderId());
         if (orderEntity == null) {
-            throw new RuntimeException("Order not found: " + orderId);
+            throw new RuntimeException("Order not found: " + orderParticipantDto.getOrderId());
         }
-        UserEntity userEntity = userRepository.findByUserId(userId);
+        UserEntity userEntity = userRepository.findByUserId(orderParticipantDto.getParticipantId());
         if (userEntity == null) {
-            throw new RuntimeException("Participant not found " + userId);
+            throw new RuntimeException("Participant not found " + orderParticipantDto.getParticipantId());
         }
 
-        Integer newQuantity = orderEntity.getQuantity() + quantity;
+        Integer newQuantity = orderEntity.getQuantity() + orderParticipantDto.getQuantity();
         int result = orderRepository.addNewParticipantForOrder(orderEntity.getId(), userEntity.getId());
         System.out.println("add new participant result: " + result);
         orderRepository.updateOrderQuantity(orderEntity.getId(), newQuantity);
