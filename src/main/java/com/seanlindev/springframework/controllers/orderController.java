@@ -2,6 +2,8 @@ package com.seanlindev.springframework.controllers;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
 import com.seanlindev.springframework.api.dto.OrderParticipantDto;
+import com.seanlindev.springframework.api.dto.mapper.OrderDtoMapper;
+import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
 import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
@@ -22,7 +24,7 @@ public class orderController {
 
     @PostMapping
     public OrderResponse createNewOrder(@RequestBody OrderDetailsRequestModel orderDetails) throws Exception {
-        OrderDto orderDto = orderService.createOrder(orderDetails.convertToOrderDto());
+        OrderDto orderDto = orderService.createOrder(OrderDtoMapper.convertToOrderDto(orderDetails));
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(orderDto, OrderResponse.class);
     }
@@ -37,10 +39,10 @@ public class orderController {
     @PutMapping("/{id}/participants")
     public OrderResponse updateOrderParticipants(@PathVariable String id,
                                                  @RequestBody OrderParticipantsRequestModel orderParticipantsRequestModel) throws Exception {
-        ModelMapper modelMapper = new ModelMapper();
-        OrderParticipantDto orderParticipantDto = modelMapper.map(orderParticipantsRequestModel, OrderParticipantDto.class);
+        OrderParticipantDto orderParticipantDto = OrderParticipantDtoMapper.convertToOrderParticipantDto(orderParticipantsRequestModel);
         orderParticipantDto.setOrderId(id);
         OrderDto orderDto = orderService.updateOrderParticipants(orderParticipantDto);
+        ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 }

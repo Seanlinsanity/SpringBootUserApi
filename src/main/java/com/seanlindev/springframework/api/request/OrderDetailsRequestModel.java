@@ -45,22 +45,4 @@ public class OrderDetailsRequestModel {
     public void setParticipants(List<String> participants) {
         this.participants = participants;
     }
-
-    public OrderDto convertToOrderDto() {
-        OrderDto orderDto = new OrderDto();
-        orderDto.setProductName(this.productName);
-        orderDto.setQuantity(this.quantity);
-
-        UserDto owner = new UserDto();
-        owner.setUserId(this.getOwner());
-        orderDto.setOwner(owner);
-
-        List<UserDto> participants = this.getParticipants().stream().map(userId -> {
-            UserDto user = new UserDto();
-            user.setUserId(userId);
-            return user;
-        }).collect(Collectors.toList());
-        orderDto.setParticipants(participants);
-        return orderDto;
-    }
 }
