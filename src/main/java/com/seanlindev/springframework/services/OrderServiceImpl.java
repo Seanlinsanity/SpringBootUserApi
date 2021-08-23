@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto) {
-        OrderEntity orderEntity = orderRepository.findByOrderId(orderParticipantDto.getOrderId());
+        OrderEntity orderEntity = orderRepository.findByOrderIdForUpdate(orderParticipantDto.getOrderId());
         if (orderEntity == null) {
             throw new RuntimeException("Order not found: " + orderParticipantDto.getOrderId());
         }

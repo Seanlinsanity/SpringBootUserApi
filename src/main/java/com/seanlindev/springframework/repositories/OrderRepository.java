@@ -26,4 +26,7 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
     void updateOrderQuantity(@Param("orderId") Long orderId, @Param("quantity") Integer quantity);
 
     OrderEntity findByOrderId(String orderId);
+
+    @Query(value = "select * from orders o where o.order_id = :orderId for update", nativeQuery = true)
+    OrderEntity findByOrderIdForUpdate(String orderId);
 }
