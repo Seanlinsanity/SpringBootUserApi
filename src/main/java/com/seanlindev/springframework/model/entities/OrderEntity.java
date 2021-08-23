@@ -32,6 +32,9 @@ public class OrderEntity {
     )
     private List<UserEntity> participants = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean isPaid;
+
     public Long getId() {
         return id;
     }
@@ -78,5 +81,13 @@ public class OrderEntity {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 }

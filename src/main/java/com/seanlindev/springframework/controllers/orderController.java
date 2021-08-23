@@ -5,6 +5,7 @@ import com.seanlindev.springframework.api.dto.OrderParticipantDto;
 import com.seanlindev.springframework.api.dto.mapper.OrderDtoMapper;
 import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
+import com.seanlindev.springframework.api.request.OrderPaidRequestModel;
 import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
 import com.seanlindev.springframework.services.OrderService;
@@ -44,5 +45,16 @@ public class orderController {
         OrderDto orderDto = orderService.updateOrderParticipants(orderParticipantDto);
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(orderDto, OrderResponse.class);
+    }
+
+    @PutMapping("/{id}/paid")
+    public OrderResponse updateOrderPaidStatus(@PathVariable String id,
+                                               @RequestBody OrderPaidRequestModel orderPaidRequestModel) throws Exception {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setOrderId(id);
+        orderDto.setPaid(orderPaidRequestModel.isPaid());
+        OrderDto resultOrderDto = orderService.updateOrderPaidStatus(orderDto);
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(resultOrderDto, OrderResponse.class);
     }
 }

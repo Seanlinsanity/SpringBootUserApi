@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setOrderId(order.getOrderId());
         orderEntity.setQuantity(order.getQuantity());
         orderEntity.setProductName(order.getProductName());
+        orderEntity.setPaid(false);
 
         UserEntity ownerEntity = userRepository.findByUserId(order.getOwner().getUserId());
         if (ownerEntity == null) {
@@ -81,6 +82,11 @@ public class OrderServiceImpl implements OrderService {
         if (orderEntity == null) {
             throw new RuntimeException("Order not found: " + orderParticipantDto.getOrderId());
         }
+
+        if (orderEntity.isPaid() == true) {
+            throw new RuntimeException("You can not join an order which is already paid, order: " + orderParticipantDto.getOrderId());
+        }
+
         UserEntity userEntity = userRepository.findByUserId(orderParticipantDto.getParticipantId());
         if (userEntity == null) {
             throw new RuntimeException("Participant not found " + orderParticipantDto.getParticipantId());
@@ -95,5 +101,24 @@ public class OrderServiceImpl implements OrderService {
         OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
         orderDto.setQuantity(newQuantity);
         return orderDto;
+    }
+
+    @Transactional
+    @Override
+    public OrderDto updateOrderPaidStatus(OrderDto orderDto) {
+        OrderEntity orderEntity = orderRepository.findByOrderIdForUpdate(orderDto.getOrderId());
+        if (orderDto.isPaid() == true && orderEntity.isPaid() == true) {
+            throw new RuntimeException("Order is already paid, order: " + orderDto.getOrderId());
+        }
+
+        if (orderDto.isPaid() == false && orderEntity.isPaid() == false) {
+            throw new RuntimeException("Invalid order paid status change: " + orderDto.getOrderId());
+        }
+        orderEntity.setPaid(orderDto.isPaid());
+        orderRepository.save(orderEntity);
+
+        ModelMapper modelMapper = new ModelMapper();
+        OrderDto updatedOrderDto = modelMapper.map(orderEntity, OrderDto.class);
+        return updatedOrderDto;
     }
 }

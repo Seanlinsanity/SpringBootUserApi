@@ -11,6 +11,7 @@ public class OrderResponse {
     private Integer quantity;
     private UserResponse owner;
     private List<UserResponse> participants = new ArrayList<>();
+    private boolean isPaid;
 
     public String getOrderId() {
         return orderId;
@@ -50,5 +51,13 @@ public class OrderResponse {
 
     public void setParticipants(List<UserResponse> participants) {
         this.participants = participants;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 }

@@ -10,6 +10,7 @@ public class OrderDto {
     private Integer quantity;
     private UserDto owner;
     private List<UserDto> participants = new ArrayList<>();
+    private boolean isPaid;
 
     public String getOrderId() {
         return orderId;
@@ -57,5 +58,13 @@ public class OrderDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 }
