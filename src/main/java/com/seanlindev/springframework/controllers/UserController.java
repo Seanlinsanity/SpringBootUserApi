@@ -8,6 +8,9 @@ import com.seanlindev.springframework.exceptions.UserServiceException;
 import com.seanlindev.springframework.services.OrderService;
 import com.seanlindev.springframework.services.UserService;
 import com.seanlindev.springframework.api.dto.UserDto;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +35,8 @@ public class UserController {
         this.orderService = orderService;
     }
 
+    @ApiOperation(value = "Get user details service end point",
+                  notes = "Specify user public id in URL path. For example: /users/abcdefg123456")
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserResponse getUser(@PathVariable String id) {
         UserDto userDto = userService.getUserByUserId(id);
@@ -83,6 +88,9 @@ public class UserController {
         return statusModel;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<UserResponse> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                        @RequestParam(value = "limit", defaultValue = "25") int limit) {
