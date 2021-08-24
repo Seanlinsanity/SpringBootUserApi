@@ -5,21 +5,23 @@ import com.seanlindev.springframework.api.dto.OrderParticipantDto;
 import com.seanlindev.springframework.api.dto.mapper.OrderDtoMapper;
 import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
-import com.seanlindev.springframework.api.request.OrderPaidRequestModel;
+import com.seanlindev.springframework.api.request.OrderStatusRequestModel;
 import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
+import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.services.OrderService;
 import org.modelmapper.ModelMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("orders")
-public class orderController {
+public class OrderController {
 
     OrderService orderService;
 
-    public orderController(OrderService orderService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
@@ -47,14 +49,19 @@ public class orderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
-    @PutMapping("/{id}/paid")
+    @PutMapping("/{id}/status")
     public OrderResponse updateOrderPaidStatus(@PathVariable String id,
-                                               @RequestBody OrderPaidRequestModel orderPaidRequestModel) throws Exception {
+                                               @RequestBody OrderStatusRequestModel orderStatusRequestModel) throws Exception {
         OrderDto orderDto = new OrderDto();
         orderDto.setOrderId(id);
-        orderDto.setPaid(orderPaidRequestModel.isPaid());
-        OrderDto resultOrderDto = orderService.updateOrderPaidStatus(orderDto);
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(resultOrderDto, OrderResponse.class);
+        try {
+            OrderStatus status = OrderStatus.valueOf(orderStatusRequestModel.getStatus());
+            orderDto.setStatus(status);
+            OrderDto resultOrderDto = orderService.updateOrderStatus(orderDto);
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(resultOrderDto, OrderResponse.class);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
     }
 }

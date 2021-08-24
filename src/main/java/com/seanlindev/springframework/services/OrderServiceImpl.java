@@ -2,6 +2,7 @@ package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
 import com.seanlindev.springframework.api.dto.OrderParticipantDto;
+import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.model.entities.OrderEntity;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.OrderRepository;
@@ -39,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setOrderId(order.getOrderId());
         orderEntity.setQuantity(order.getQuantity());
         orderEntity.setProductName(order.getProductName());
-        orderEntity.setPaid(false);
+        orderEntity.setStatus(OrderStatus.CREATED);
 
         UserEntity ownerEntity = userRepository.findByUserId(order.getOwner().getUserId());
         if (ownerEntity == null) {
@@ -83,8 +84,12 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Order not found: " + orderParticipantDto.getOrderId());
         }
 
-        if (orderEntity.isPaid() == true) {
+        if (orderEntity.getStatus() == OrderStatus.PAID) {
             throw new RuntimeException("You can not join an order which is already paid, order: " + orderParticipantDto.getOrderId());
+        }
+
+        if (orderEntity.getStatus() == OrderStatus.CANCELLED) {
+            throw new RuntimeException("You can not join an order which is already cancelled, order: " + orderParticipantDto.getOrderId());
         }
 
         UserEntity userEntity = userRepository.findByUserId(orderParticipantDto.getParticipantId());
@@ -105,16 +110,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDto updateOrderPaidStatus(OrderDto orderDto) {
+    public OrderDto updateOrderStatus(OrderDto orderDto) {
         OrderEntity orderEntity = orderRepository.findByOrderIdForUpdate(orderDto.getOrderId());
-        if (orderDto.isPaid() == true && orderEntity.isPaid() == true) {
+        if (orderDto.getStatus() == OrderStatus.PAID && orderEntity.getStatus() == OrderStatus.PAID) {
             throw new RuntimeException("Order is already paid, order: " + orderDto.getOrderId());
         }
 
-        if (orderDto.isPaid() == false && orderEntity.isPaid() == false) {
+        if (orderDto.getStatus() == OrderStatus.CANCELLED && orderEntity.getStatus() == OrderStatus.CANCELLED) {
             throw new RuntimeException("Invalid order paid status change: " + orderDto.getOrderId());
         }
-        orderEntity.setPaid(orderDto.isPaid());
+        orderEntity.setStatus(orderDto.getStatus());
         orderRepository.save(orderEntity);
 
         ModelMapper modelMapper = new ModelMapper();

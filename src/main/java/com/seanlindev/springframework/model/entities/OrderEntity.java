@@ -1,6 +1,9 @@
 package com.seanlindev.springframework.model.entities;
 
 
+import com.seanlindev.springframework.model.OrderStatus;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +35,9 @@ public class OrderEntity {
     )
     private List<UserEntity> participants = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean isPaid;
+    private OrderStatus status;
 
     public Long getId() {
         return id;
@@ -83,11 +87,11 @@ public class OrderEntity {
         this.orderId = orderId;
     }
 
-    public boolean isPaid() {
-        return isPaid;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setPaid(boolean paid) {
-        isPaid = paid;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

@@ -10,5 +10,5 @@ public interface OrderService {
     List<OrderDto> getOrdersByOwnerId(String ownerId);
     OrderDto findByOrderId(String orderId);
     OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto);
-    OrderDto updateOrderPaidStatus(OrderDto orderDto);
+    OrderDto updateOrderStatus(OrderDto orderDto);
 }

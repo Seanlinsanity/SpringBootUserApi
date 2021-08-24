@@ -1,5 +1,7 @@
 package com.seanlindev.springframework.api.dto;
 
+import com.seanlindev.springframework.model.OrderStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class OrderDto {
     private Integer quantity;
     private UserDto owner;
     private List<UserDto> participants = new ArrayList<>();
-    private boolean isPaid;
+    private OrderStatus status;
 
     public String getOrderId() {
         return orderId;
@@ -60,11 +62,11 @@ public class OrderDto {
         this.id = id;
     }
 
-    public boolean isPaid() {
-        return isPaid;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setPaid(boolean paid) {
-        isPaid = paid;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

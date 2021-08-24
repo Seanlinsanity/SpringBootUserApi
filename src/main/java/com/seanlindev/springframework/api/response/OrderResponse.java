@@ -1,6 +1,7 @@
 package com.seanlindev.springframework.api.response;
 
 import com.seanlindev.springframework.api.dto.UserDto;
+import com.seanlindev.springframework.model.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class OrderResponse {
     private Integer quantity;
     private UserResponse owner;
     private List<UserResponse> participants = new ArrayList<>();
-    private boolean isPaid;
+    private OrderStatus orderStatus;
 
     public String getOrderId() {
         return orderId;
@@ -53,11 +54,11 @@ public class OrderResponse {
         this.participants = participants;
     }
 
-    public boolean isPaid() {
-        return isPaid;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setPaid(boolean paid) {
-        isPaid = paid;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
