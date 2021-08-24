@@ -12,7 +12,7 @@ public class OrderResponse {
     private Integer quantity;
     private UserResponse owner;
     private List<UserResponse> participants = new ArrayList<>();
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     public String getOrderId() {
         return orderId;
@@ -54,11 +54,11 @@ public class OrderResponse {
         this.participants = participants;
     }
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setStatus(OrderStatus orderStatus) {
+        this.status = status;
     }
 }

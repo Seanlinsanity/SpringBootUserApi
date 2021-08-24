@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.seanlindev</groupId>
     <artifactId>user-auth-api</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <name>user-auth-api</name>
     <description>User auth api project for Spring Boot</description>
     <properties>

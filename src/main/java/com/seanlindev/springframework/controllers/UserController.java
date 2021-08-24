@@ -37,6 +37,9 @@ public class UserController {
 
     @ApiOperation(value = "Get user details service end point",
                   notes = "Specify user public id in URL path. For example: /users/abcdefg123456")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public UserResponse getUser(@PathVariable String id) {
         UserDto userDto = userService.getUserByUserId(id);
@@ -60,6 +63,9 @@ public class UserController {
         return userResponse;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @PutMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -77,6 +83,9 @@ public class UserController {
         return userResponse;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @DeleteMapping(path = "/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -102,6 +111,9 @@ public class UserController {
                 }).collect(Collectors.toList());
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @GetMapping(path = "/{id}/addresses", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<AddressResponse> getUserAddresses(@PathVariable String id) {
         UserDto userDto = userService.getUserByUserId(id);
@@ -111,6 +123,9 @@ public class UserController {
         return modelMapper.map(userDto.getAddresses(), listType);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @GetMapping("/{id}/owned-orders")
     public List<OrderResponse> getUserOwnedOrders(@PathVariable String id) {
         List<OrderDto> orderDtoList = orderService.getOrdersByOwnerId(id);

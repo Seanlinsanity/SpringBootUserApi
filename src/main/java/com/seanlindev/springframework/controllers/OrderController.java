@@ -10,6 +10,8 @@ import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
 import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.services.OrderService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @PostMapping
     public OrderResponse createNewOrder(@RequestBody OrderDetailsRequestModel orderDetails) throws Exception {
         OrderDto orderDto = orderService.createOrder(OrderDtoMapper.convertToOrderDto(orderDetails));
@@ -32,6 +37,9 @@ public class OrderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @GetMapping("/{id}")
     public OrderResponse getOrderById(@PathVariable String id) {
         OrderDto orderDto = orderService.findByOrderId(id);
@@ -39,6 +47,9 @@ public class OrderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @PutMapping("/{id}/participants")
     public OrderResponse updateOrderParticipants(@PathVariable String id,
                                                  @RequestBody OrderParticipantsRequestModel orderParticipantsRequestModel) throws Exception {
@@ -49,6 +60,9 @@ public class OrderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
     @PutMapping("/{id}/status")
     public OrderResponse updateOrderPaidStatus(@PathVariable String id,
                                                @RequestBody OrderStatusRequestModel orderStatusRequestModel) throws Exception {
