@@ -64,7 +64,7 @@ public class OrderController {
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
     @PutMapping("/{id}/status")
-    public OrderResponse updateOrderPaidStatus(@PathVariable String id,
+    public OrderResponse updateOrderStatus(@PathVariable String id,
                                                @RequestBody OrderStatusRequestModel orderStatusRequestModel) throws Exception {
         OrderDto orderDto = new OrderDto();
         orderDto.setOrderId(id);

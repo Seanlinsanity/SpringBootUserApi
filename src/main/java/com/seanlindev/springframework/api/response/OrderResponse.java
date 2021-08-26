@@ -59,6 +59,6 @@ public class OrderResponse {
     }
 
     public void setStatus(OrderStatus orderStatus) {
-        this.status = status;
+        this.status = orderStatus;
     }
 }
