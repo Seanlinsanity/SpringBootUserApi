@@ -7,7 +7,10 @@ import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
 import com.seanlindev.springframework.api.request.OrderStatusRequestModel;
 import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
+import com.seanlindev.springframework.api.request.RequestOperationName;
+import com.seanlindev.springframework.api.response.OperationStatusModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
+import com.seanlindev.springframework.api.response.RequestOperationStatus;
 import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.services.OrderService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -78,4 +81,17 @@ public class OrderController {
             throw e;
         }
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+    })
+    @DeleteMapping("/{id}")
+    public OperationStatusModel deleteOrder(@PathVariable String id) throws Exception {
+        OperationStatusModel statusModel = new OperationStatusModel();
+        statusModel.setOperationName(RequestOperationName.DELETE.name());
+        orderService.deleteOrderByOrderId(id);
+        statusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        return statusModel;
+    }
+
 }

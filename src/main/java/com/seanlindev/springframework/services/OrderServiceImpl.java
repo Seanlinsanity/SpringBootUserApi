@@ -125,7 +125,8 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderServiceException("Order is already paid, order: " + orderDto.getOrderId());
         }
 
-        if (orderDto.getStatus() == OrderStatus.CANCELLED && orderEntity.getStatus() == OrderStatus.CANCELLED) {
+        if (orderDto.getStatus() == OrderStatus.CANCELLED && orderEntity.getStatus() == OrderStatus.CANCELLED
+            || orderDto.getStatus() == OrderStatus.CREATED) {
             throw new OrderServiceException("Invalid order paid status change, order: " + orderDto.getOrderId());
         }
         orderEntity.setStatus(orderDto.getStatus());
@@ -134,5 +135,14 @@ public class OrderServiceImpl implements OrderService {
         ModelMapper modelMapper = new ModelMapper();
         OrderDto updatedOrderDto = modelMapper.map(orderEntity, OrderDto.class);
         return updatedOrderDto;
+    }
+
+    @Override
+    public void deleteOrderByOrderId(String orderId) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new OrderServiceException("Order not found: " + orderId);
+        }
+        orderRepository.delete(orderEntity);
     }
 }

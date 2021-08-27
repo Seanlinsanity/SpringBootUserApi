@@ -11,4 +11,5 @@ public interface OrderService {
     OrderDto findByOrderId(String orderId);
     OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto);
     OrderDto updateOrderStatus(OrderDto orderDto);
+    void deleteOrderByOrderId(String orderId);
 }
