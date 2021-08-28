@@ -1,6 +1,7 @@
 package com.seanlindev.springframework.api.dto.mapper;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
+import com.seanlindev.springframework.api.dto.ParticipantOrderDto;
 import com.seanlindev.springframework.api.dto.UserDto;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
 
@@ -17,12 +18,13 @@ public class OrderDtoMapper {
         owner.setUserId(orderDetailsRequestModel.getOwner());
         orderDto.setOwner(owner);
 
-        List<UserDto> participants = orderDetailsRequestModel.getParticipants().stream().map(userId -> {
-            UserDto user = new UserDto();
-            user.setUserId(userId);
-            return user;
+        List<ParticipantOrderDto> participantOrders = orderDetailsRequestModel.getParticipants().stream().map(orderParticipant -> {
+            ParticipantOrderDto participantOrderDto = new ParticipantOrderDto();
+            participantOrderDto.setUserId(orderParticipant.getUserId());
+            participantOrderDto.setQuantity(orderParticipant.getQuantity());
+            return participantOrderDto;
         }).collect(Collectors.toList());
-        orderDto.setParticipants(participants);
+        orderDto.setParticipantOrders(participantOrders);
         return orderDto;
     }
 }

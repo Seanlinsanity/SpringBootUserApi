@@ -29,4 +29,7 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
 
     @Query(value = "select * from orders o where o.order_id = :orderId for update", nativeQuery = true)
     OrderEntity findByOrderIdForUpdate(String orderId);
+
+    @Query(value = "select * from orders o where o.order_id = :orderId for share", nativeQuery = true)
+    OrderEntity findByOrderIdForShare(String orderId);
 }

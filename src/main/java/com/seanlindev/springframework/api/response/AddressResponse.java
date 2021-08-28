@@ -1,20 +1,20 @@
 package com.seanlindev.springframework.api.response;
 
 public class AddressResponse {
-    private String addressId;
+//    private String addressId;
     private String city;
     private String country;
     private String streetName;
     private String postalCode;
     private String type;
 
-    public String getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
-    }
+//    public String getAddressId() {
+//        return addressId;
+//    }
+//
+//    public void setAddressId(String addressId) {
+//        this.addressId = addressId;
+//    }
 
     public String getCity() {
         return city;

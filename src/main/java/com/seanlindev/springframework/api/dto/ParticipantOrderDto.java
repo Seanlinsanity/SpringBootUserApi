@@ -1,16 +1,17 @@
 package com.seanlindev.springframework.api.dto;
 
-public class OrderParticipantDto {
+public class ParticipantOrderDto {
+    private String identity;
     private String orderId;
-    private String participantId;
+    private String userId;
     private Integer quantity;
 
-    public String getParticipantId() {
-        return participantId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setParticipantId(String participantId) {
-        this.participantId = participantId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getQuantity() {
@@ -27,5 +28,13 @@ public class OrderParticipantDto {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 }

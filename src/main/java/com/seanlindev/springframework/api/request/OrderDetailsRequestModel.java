@@ -12,7 +12,7 @@ public class OrderDetailsRequestModel {
     private String productName;
     private Integer quantity;
     private String owner;
-    private List<String> participants = new ArrayList<>();
+    private List<OrderParticipantsRequestModel> participants = new ArrayList<>();
 
     public String getProductName() {
         return productName;
@@ -38,11 +38,11 @@ public class OrderDetailsRequestModel {
         this.owner = owner;
     }
 
-    public List<String> getParticipants() {
+    public List<OrderParticipantsRequestModel> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(List<OrderParticipantsRequestModel> participants) {
         this.participants = participants;
     }
 }

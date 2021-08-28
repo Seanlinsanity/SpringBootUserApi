@@ -1,5 +1,6 @@
 package com.seanlindev.springframework.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seanlindev.springframework.model.OrderStatus;
 
 import java.util.ArrayList;
@@ -11,7 +12,11 @@ public class OrderDto {
     private String productName;
     private Integer quantity;
     private UserDto owner;
-    private List<UserDto> participants = new ArrayList<>();
+//    private List<UserDto> participants = new ArrayList<>();
+
+    @JsonProperty("participant_orders")
+    private List<ParticipantOrderDto> participantOrders = new ArrayList<>();
+    
     private OrderStatus status;
 
     public String getOrderId() {
@@ -46,13 +51,13 @@ public class OrderDto {
         this.owner = owner;
     }
 
-    public List<UserDto> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<UserDto> participants) {
-        this.participants = participants;
-    }
+//    public List<UserDto> getParticipants() {
+//        return participants;
+//    }
+//
+//    public void setParticipants(List<UserDto> participants) {
+//        this.participants = participants;
+//    }
 
     public String getId() {
         return id;
@@ -68,5 +73,13 @@ public class OrderDto {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public List<ParticipantOrderDto> getParticipantOrders() {
+        return participantOrders;
+    }
+
+    public void setParticipantOrders(List<ParticipantOrderDto> participantOrders) {
+        this.participantOrders = participantOrders;
     }
 }

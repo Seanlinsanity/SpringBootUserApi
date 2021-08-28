@@ -1,7 +1,7 @@
 package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
-import com.seanlindev.springframework.api.dto.OrderParticipantDto;
+import com.seanlindev.springframework.api.dto.ParticipantOrderDto;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface OrderService {
     OrderDto createOrder(OrderDto order);
     List<OrderDto> getOrdersByOwnerId(String ownerId);
     OrderDto findByOrderId(String orderId);
-    OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto);
+    OrderDto updateOrderParticipants(ParticipantOrderDto participantOrderDto);
     OrderDto updateOrderStatus(OrderDto orderDto);
-    void deleteOrderByOrderId(String orderId);
+    Boolean deleteOrderByOrderId(String orderId);
 }

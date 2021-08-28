@@ -1,6 +1,11 @@
-package com.seanlindev.springframework.api.request;
+package com.seanlindev.springframework.api.response;
 
-public class OrderParticipantsRequestModel {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class ParticipantOrderResponse {
+    @JsonProperty("id")
+    private String identity;
+
     private String userId;
     private Integer quantity;
 
@@ -18,5 +23,13 @@ public class OrderParticipantsRequestModel {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
     }
 }

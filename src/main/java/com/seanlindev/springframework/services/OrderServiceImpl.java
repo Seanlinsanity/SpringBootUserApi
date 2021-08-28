@@ -1,12 +1,14 @@
 package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
-import com.seanlindev.springframework.api.dto.OrderParticipantDto;
+import com.seanlindev.springframework.api.dto.ParticipantOrderDto;
 import com.seanlindev.springframework.exceptions.OrderServiceException;
 import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.model.entities.OrderEntity;
+import com.seanlindev.springframework.model.entities.ParticipantOrderEntity;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.OrderRepository;
+import com.seanlindev.springframework.repositories.ParticipantOrderRepository;
 import com.seanlindev.springframework.repositories.UserRepository;
 import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
 import org.modelmapper.ModelMapper;
@@ -23,15 +25,18 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     OrderRepository orderRepository;
+    ParticipantOrderRepository participantOrderRepository;
     UserRepository userRepository;
     PublicIdGenerator publicIdGenerator;
 
     public OrderServiceImpl(OrderRepository orderRepository,
+                            ParticipantOrderRepository participantOrderRepository,
                             UserRepository userRepository,
                             PublicIdGenerator publicIdGenerator) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.publicIdGenerator = publicIdGenerator;
+        this.participantOrderRepository = participantOrderRepository;
     }
 
     @Override
@@ -49,14 +54,24 @@ public class OrderServiceImpl implements OrderService {
         }
         orderEntity.setOwner(ownerEntity);
 
-        List<UserEntity> participants = order.getParticipants().stream().map(userDto -> {
-            UserEntity participantEntity = userRepository.findByUserId(userDto.getUserId());
-            if (participantEntity == null) {
-                throw new UsernameNotFoundException("Order participant not found: " + userDto.getUserId());
-            }
-            return participantEntity;
+//        List<UserEntity> participants = order.getParticipantOrders().stream().map(orderParticipantDto -> {
+//            UserEntity participantEntity = userRepository.findByUserId(orderParticipantDto.getUserId());
+//            if (participantEntity == null) {
+//                throw new UsernameNotFoundException("Order participant not found: " + orderParticipantDto.getUserId());
+//            }
+//            return participantEntity;
+//        }).collect(Collectors.toList());
+//        orderEntity.setParticipants(participants);
+
+        List<ParticipantOrderEntity> participantOrders = order.getParticipantOrders().stream().map(participantOrderDto -> {
+            ParticipantOrderEntity participantOrderEntity = new ParticipantOrderEntity();
+            participantOrderEntity.setParentOrder(orderEntity);
+            participantOrderEntity.setUserId(participantOrderDto.getUserId());
+            participantOrderEntity.setQuantity(participantOrderDto.getQuantity());
+            participantOrderEntity.setIdentity(publicIdGenerator.generateOrderId(30));
+            return participantOrderEntity;
         }).collect(Collectors.toList());
-        orderEntity.setParticipants(participants);
+        orderEntity.setParticipantOrders(participantOrders);
 
         OrderEntity savedOrder = orderRepository.save(orderEntity);
         ModelMapper modelMapper = new ModelMapper();
@@ -85,32 +100,36 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDto updateOrderParticipants(OrderParticipantDto orderParticipantDto) {
-        OrderEntity orderEntity = orderRepository.findByOrderIdForUpdate(orderParticipantDto.getOrderId());
+    public OrderDto updateOrderParticipants(ParticipantOrderDto participantOrderDto) {
+        OrderEntity orderEntity = orderRepository.findByOrderIdForShare(participantOrderDto.getOrderId());
         if (orderEntity == null) {
-            throw new OrderServiceException("Order not found, order: " + orderParticipantDto.getOrderId());
+            throw new OrderServiceException("Order not found, order: " + participantOrderDto.getOrderId());
         }
 
         if (orderEntity.getStatus() == OrderStatus.PAID) {
-            throw new OrderServiceException("You can not join an order which is already paid, order: " + orderParticipantDto.getOrderId());
+            throw new OrderServiceException("You can not join an order which is already paid, order: " + participantOrderDto.getOrderId());
         }
 
         if (orderEntity.getStatus() == OrderStatus.CANCELLED) {
-            throw new OrderServiceException("You can not join an order which is already cancelled, order: " + orderParticipantDto.getOrderId());
+            throw new OrderServiceException("You can not join an order which is already cancelled, order: " + participantOrderDto.getOrderId());
         }
 
-        UserEntity userEntity = userRepository.findByUserId(orderParticipantDto.getParticipantId());
+        UserEntity userEntity = userRepository.findByUserId(participantOrderDto.getUserId());
         if (userEntity == null) {
-            throw new UsernameNotFoundException("Participant not found, id: " + orderParticipantDto.getParticipantId());
+            throw new UsernameNotFoundException("Participant not found, id: " + participantOrderDto.getUserId());
         }
 
-        Integer newQuantity = orderEntity.getQuantity() + orderParticipantDto.getQuantity();
         int result = orderRepository.addNewParticipantForOrder(orderEntity.getId(), userEntity.getId());
-        orderRepository.updateOrderQuantity(orderEntity.getId(), newQuantity);
+
+        ParticipantOrderEntity participantOrderEntity = new ParticipantOrderEntity();
+        participantOrderEntity.setIdentity(publicIdGenerator.generateOrderId(30));
+        participantOrderEntity.setQuantity(participantOrderDto.getQuantity());
+        participantOrderEntity.setUserId(participantOrderDto.getUserId());
+        participantOrderEntity.setParentOrder(orderEntity);
+        participantOrderRepository.save(participantOrderEntity);
 
         ModelMapper modelMapper = new ModelMapper();
         OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
-        orderDto.setQuantity(newQuantity);
         return orderDto;
     }
 
@@ -138,11 +157,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrderByOrderId(String orderId) {
+    public Boolean deleteOrderByOrderId(String orderId) {
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
         if (orderEntity == null) {
-            throw new OrderServiceException("Order not found: " + orderId);
+            return false;
         }
         orderRepository.delete(orderEntity);
+        return true;
     }
 }

@@ -11,7 +11,8 @@ public class OrderResponse {
     private String productName;
     private Integer quantity;
     private UserResponse owner;
-    private List<UserResponse> participants = new ArrayList<>();
+//    private List<UserResponse> participants = new ArrayList<>();
+    private List<ParticipantOrderResponse> participantOrders = new ArrayList<>();
     private OrderStatus status;
 
     public String getOrderId() {
@@ -46,13 +47,13 @@ public class OrderResponse {
         this.owner = owner;
     }
 
-    public List<UserResponse> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<UserResponse> participants) {
-        this.participants = participants;
-    }
+//    public List<UserResponse> getParticipants() {
+//        return participants;
+//    }
+//
+//    public void setParticipants(List<UserResponse> participants) {
+//        this.participants = participants;
+//    }
 
     public OrderStatus getStatus() {
         return status;
@@ -60,5 +61,13 @@ public class OrderResponse {
 
     public void setStatus(OrderStatus orderStatus) {
         this.status = orderStatus;
+    }
+
+    public List<ParticipantOrderResponse> getParticipantOrders() {
+        return participantOrders;
+    }
+
+    public void setParticipantOrders(List<ParticipantOrderResponse> participantOrders) {
+        this.participantOrders = participantOrders;
     }
 }

@@ -35,6 +35,9 @@ public class OrderEntity {
     )
     private List<UserEntity> participants = new ArrayList<>();
 
+    @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL)
+    private List<ParticipantOrderEntity> participantOrders = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
@@ -93,5 +96,13 @@ public class OrderEntity {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public List<ParticipantOrderEntity> getParticipantOrders() {
+        return participantOrders;
+    }
+
+    public void setParticipantOrders(List<ParticipantOrderEntity> participantOrders) {
+        this.participantOrders = participantOrders;
     }
 }
