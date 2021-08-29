@@ -4,4 +4,5 @@ import com.seanlindev.springframework.api.dto.ProductDto;
 
 public interface ProductService {
     ProductDto createProduct(ProductDto productDto);
+    ProductDto getProductByProductId(String productId);
 }

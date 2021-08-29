@@ -33,4 +33,18 @@ public class ProductServiceImpl implements ProductService{
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(savedProduct, ProductDto.class);
     }
+
+    @Override
+    public ProductDto getProductByProductId(String productId) {
+        if (productId.isEmpty()) {
+            throw new RuntimeException("Product Id is empty");
+        }
+
+        ProductEntity productEntity = productRepository.findByProductId(productId);
+        if (productEntity == null) {
+            throw new RuntimeException("Invalid productId: " + productId);
+        }
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(productEntity, ProductDto.class);
+    }
 }
