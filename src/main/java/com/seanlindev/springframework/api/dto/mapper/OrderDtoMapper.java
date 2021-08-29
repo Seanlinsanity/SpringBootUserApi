@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class OrderDtoMapper {
     public static OrderDto convertToOrderDto(OrderDetailsRequestModel orderDetailsRequestModel) {
         OrderDto orderDto = new OrderDto();
-        orderDto.setProductName(orderDetailsRequestModel.getProductName());
+        orderDto.setTitle(orderDetailsRequestModel.getTitle());
         orderDto.setQuantity(orderDetailsRequestModel.getQuantity());
 
         UserDto owner = new UserDto();
@@ -27,9 +27,9 @@ public class OrderDtoMapper {
         }).collect(Collectors.toList());
         orderDto.setParticipantOrders(participantOrders);
 
-        List<OrderItemDto> orderItems = orderDetailsRequestModel.getItems().stream().map(item -> {
+        List<OrderItemDto> orderItems = orderDetailsRequestModel.getItems().stream().map(productId -> {
             OrderItemDto orderItemDto = new OrderItemDto();
-            orderItemDto.setProductId(item.getProductId());
+            orderItemDto.setProductId(productId);
             return orderItemDto;
         }).collect(Collectors.toList());
         orderDto.setItems(orderItems);

@@ -1,7 +1,7 @@
 package com.seanlindev.springframework.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.seanlindev.springframework.api.dto.UserDto;
+import com.seanlindev.springframework.api.dto.OrderItemDto;
 import com.seanlindev.springframework.model.OrderStatus;
 
 import java.util.ArrayList;
@@ -9,13 +9,14 @@ import java.util.List;
 
 public class OrderResponse {
     private String orderId;
-    private String productName;
+    private String title;
     private Integer quantity;
     private UserResponse owner;
-//    private List<UserResponse> participants = new ArrayList<>();
+    private List<OrderItemDto> items;
+    private OrderStatus status;
+
     @JsonProperty("participant_orders")
     private List<ParticipantOrderResponse> participantOrders = new ArrayList<>();
-    private OrderStatus status;
 
     public String getOrderId() {
         return orderId;
@@ -25,12 +26,12 @@ public class OrderResponse {
         this.orderId = orderId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getQuantity() {
@@ -49,14 +50,6 @@ public class OrderResponse {
         this.owner = owner;
     }
 
-//    public List<UserResponse> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<UserResponse> participants) {
-//        this.participants = participants;
-//    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -71,5 +64,13 @@ public class OrderResponse {
 
     public void setParticipantOrders(List<ParticipantOrderResponse> participantOrders) {
         this.participantOrders = participantOrders;
+    }
+
+    public List<OrderItemDto> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemDto> items) {
+        this.items = items;
     }
 }

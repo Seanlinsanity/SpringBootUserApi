@@ -17,8 +17,8 @@ public class OrderEntity {
     @Column(length = 30, nullable = false)
     private String orderId;
 
-    @Column(length = 30, nullable = false)
-    private String productName;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -27,17 +27,9 @@ public class OrderEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "order_participant",
-//            joinColumns = {@JoinColumn(name = "order_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "user_id")}
-//    )
-//    private List<UserEntity> participants = new ArrayList<>();
-
     @ManyToMany
     @JoinTable(
-            name = "order_product",
+            name = "orders_products",
             joinColumns = {@JoinColumn(name = "order_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")}
     )
@@ -58,12 +50,12 @@ public class OrderEntity {
         this.id = id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getQuantity() {
@@ -81,14 +73,6 @@ public class OrderEntity {
     public void setOwner(UserEntity owner) {
         this.owner = owner;
     }
-
-//    public List<UserEntity> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<UserEntity> participants) {
-//        this.participants = participants;
-//    }
 
     public String getOrderId() {
         return orderId;
@@ -112,5 +96,13 @@ public class OrderEntity {
 
     public void setParticipantOrders(List<ParticipantOrderEntity> participantOrders) {
         this.participantOrders = participantOrders;
+    }
+
+    public List<ProductEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ProductEntity> items) {
+        this.items = items;
     }
 }

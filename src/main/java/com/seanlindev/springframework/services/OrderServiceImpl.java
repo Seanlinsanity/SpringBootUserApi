@@ -6,9 +6,11 @@ import com.seanlindev.springframework.exceptions.OrderServiceException;
 import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.model.entities.OrderEntity;
 import com.seanlindev.springframework.model.entities.ParticipantOrderEntity;
+import com.seanlindev.springframework.model.entities.ProductEntity;
 import com.seanlindev.springframework.model.entities.UserEntity;
 import com.seanlindev.springframework.repositories.OrderRepository;
 import com.seanlindev.springframework.repositories.ParticipantOrderRepository;
+import com.seanlindev.springframework.repositories.ProductRepository;
 import com.seanlindev.springframework.repositories.UserRepository;
 import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
 import org.modelmapper.ModelMapper;
@@ -27,14 +29,17 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     ParticipantOrderRepository participantOrderRepository;
     UserRepository userRepository;
+    ProductRepository productRepository;
     PublicIdGenerator publicIdGenerator;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             ParticipantOrderRepository participantOrderRepository,
                             UserRepository userRepository,
+                            ProductRepository productRepository,
                             PublicIdGenerator publicIdGenerator) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
         this.publicIdGenerator = publicIdGenerator;
         this.participantOrderRepository = participantOrderRepository;
     }
@@ -45,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setOrderId(order.getOrderId());
         orderEntity.setQuantity(order.getQuantity());
-        orderEntity.setProductName(order.getProductName());
+        orderEntity.setTitle(order.getTitle());
         orderEntity.setStatus(OrderStatus.CREATED);
 
         UserEntity ownerEntity = userRepository.findByUserId(order.getOwner().getUserId());
@@ -63,6 +68,15 @@ public class OrderServiceImpl implements OrderService {
             return participantOrderEntity;
         }).collect(Collectors.toList());
         orderEntity.setParticipantOrders(participantOrders);
+
+        List<ProductEntity> items = order.getItems().stream().map(productDto -> {
+            ProductEntity productEntity = productRepository.findByProductId(productDto.getProductId());
+            if (productEntity == null) {
+                throw new OrderServiceException("Order items are invalid, product id: " + productDto.getProductId());
+            }
+            return productEntity;
+        }).collect(Collectors.toList());
+        orderEntity.setItems(items);
 
         OrderEntity savedOrder = orderRepository.save(orderEntity);
         ModelMapper modelMapper = new ModelMapper();

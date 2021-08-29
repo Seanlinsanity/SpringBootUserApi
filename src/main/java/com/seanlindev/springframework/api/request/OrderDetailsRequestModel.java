@@ -1,21 +1,25 @@
 package com.seanlindev.springframework.api.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailsRequestModel {
-    private String productName;
+    private String title;
     private Integer quantity;
     private String owner;
-    private List<ParticipantOrderRequestModel> participants = new ArrayList<>();
-    private List<OrderItemRequestModel> items = new ArrayList<>();
+    private List<String> items = new ArrayList<>();
 
-    public String getProductName() {
-        return productName;
+    @JsonProperty("participant_orders")
+    private List<ParticipantOrderRequestModel> participants = new ArrayList<>();
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getQuantity() {
@@ -42,11 +46,11 @@ public class OrderDetailsRequestModel {
         this.participants = participants;
     }
 
-    public List<OrderItemRequestModel> getItems() {
+    public List<String> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItemRequestModel> items) {
+    public void setItems(List<String> items) {
         this.items = items;
     }
 }

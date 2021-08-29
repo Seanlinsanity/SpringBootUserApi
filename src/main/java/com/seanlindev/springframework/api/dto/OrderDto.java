@@ -9,17 +9,14 @@ import java.util.List;
 public class OrderDto {
     private String id;
     private String orderId;
-    private String productName;
+    private String title;
     private Integer quantity;
     private UserDto owner;
-//    private List<UserDto> participants = new ArrayList<>();
+    private List<OrderItemDto> items = new ArrayList<>();
+    private OrderStatus status;
 
     @JsonProperty("participant_orders")
     private List<ParticipantOrderDto> participantOrders = new ArrayList<>();
-
-    private List<OrderItemDto> items = new ArrayList<>();
-
-    private OrderStatus status;
 
     public String getOrderId() {
         return orderId;
@@ -29,12 +26,12 @@ public class OrderDto {
         this.orderId = orderId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getQuantity() {
@@ -52,14 +49,6 @@ public class OrderDto {
     public void setOwner(UserDto owner) {
         this.owner = owner;
     }
-
-//    public List<UserDto> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<UserDto> participants) {
-//        this.participants = participants;
-//    }
 
     public String getId() {
         return id;

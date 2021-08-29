@@ -34,9 +34,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<OrderEntity> ownedOrders;
 
-//    @ManyToMany(mappedBy = "participants")
-//    private List<OrderEntity> participatingOrders;
-
     public Long getId() {
         return id;
     }
