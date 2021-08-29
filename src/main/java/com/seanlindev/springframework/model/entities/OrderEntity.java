@@ -27,13 +27,21 @@ public class OrderEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "order_participant",
+//            joinColumns = {@JoinColumn(name = "order_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+//    )
+//    private List<UserEntity> participants = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
-            name = "order_participant",
+            name = "order_product",
             joinColumns = {@JoinColumn(name = "order_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+            inverseJoinColumns = {@JoinColumn(name = "product_id")}
     )
-    private List<UserEntity> participants = new ArrayList<>();
+    private List<ProductEntity> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL)
     private List<ParticipantOrderEntity> participantOrders = new ArrayList<>();
@@ -74,13 +82,13 @@ public class OrderEntity {
         this.owner = owner;
     }
 
-    public List<UserEntity> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<UserEntity> participants) {
-        this.participants = participants;
-    }
+//    public List<UserEntity> getParticipants() {
+//        return participants;
+//    }
+//
+//    public void setParticipants(List<UserEntity> participants) {
+//        this.participants = participants;
+//    }
 
     public String getOrderId() {
         return orderId;

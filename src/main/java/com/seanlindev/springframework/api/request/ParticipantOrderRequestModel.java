@@ -1,6 +1,6 @@
 package com.seanlindev.springframework.api.request;
 
-public class OrderParticipantsRequestModel {
+public class ParticipantOrderRequestModel {
     private String userId;
     private Integer quantity;
 

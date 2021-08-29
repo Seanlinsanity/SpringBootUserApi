@@ -1,5 +1,6 @@
 package com.seanlindev.springframework.api.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seanlindev.springframework.api.dto.UserDto;
 import com.seanlindev.springframework.model.OrderStatus;
 
@@ -12,6 +13,7 @@ public class OrderResponse {
     private Integer quantity;
     private UserResponse owner;
 //    private List<UserResponse> participants = new ArrayList<>();
+    @JsonProperty("participant_orders")
     private List<ParticipantOrderResponse> participantOrders = new ArrayList<>();
     private OrderStatus status;
 

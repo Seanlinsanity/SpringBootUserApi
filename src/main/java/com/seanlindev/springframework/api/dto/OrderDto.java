@@ -16,7 +16,9 @@ public class OrderDto {
 
     @JsonProperty("participant_orders")
     private List<ParticipantOrderDto> participantOrders = new ArrayList<>();
-    
+
+    private List<OrderItemDto> items = new ArrayList<>();
+
     private OrderStatus status;
 
     public String getOrderId() {
@@ -81,5 +83,13 @@ public class OrderDto {
 
     public void setParticipantOrders(List<ParticipantOrderDto> participantOrders) {
         this.participantOrders = participantOrders;
+    }
+
+    public List<OrderItemDto> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemDto> items) {
+        this.items = items;
     }
 }

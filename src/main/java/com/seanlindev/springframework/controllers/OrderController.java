@@ -6,9 +6,8 @@ import com.seanlindev.springframework.api.dto.mapper.OrderDtoMapper;
 import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
 import com.seanlindev.springframework.api.request.OrderStatusRequestModel;
-import com.seanlindev.springframework.api.request.OrderParticipantsRequestModel;
+import com.seanlindev.springframework.api.request.ParticipantOrderRequestModel;
 import com.seanlindev.springframework.api.request.RequestOperationName;
-import com.seanlindev.springframework.api.response.ErrorMessage;
 import com.seanlindev.springframework.api.response.OperationStatusModel;
 import com.seanlindev.springframework.api.response.OrderResponse;
 import com.seanlindev.springframework.api.response.RequestOperationStatus;
@@ -17,12 +16,9 @@ import com.seanlindev.springframework.services.OrderService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 
 @RestController
@@ -40,9 +36,10 @@ public class OrderController {
     })
     @PostMapping
     public OrderResponse createNewOrder(@RequestBody OrderDetailsRequestModel orderDetails) throws Exception {
-        OrderDto orderDto = orderService.createOrder(OrderDtoMapper.convertToOrderDto(orderDetails));
+        OrderDto orderDto = OrderDtoMapper.convertToOrderDto(orderDetails);
+        OrderDto createdOrderDto = orderService.createOrder(orderDto);
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(orderDto, OrderResponse.class);
+        return modelMapper.map(createdOrderDto, OrderResponse.class);
     }
 
     @ApiImplicitParams({
@@ -60,8 +57,8 @@ public class OrderController {
     })
     @PutMapping("/{id}/participants")
     public OrderResponse updateOrderParticipants(@PathVariable String id,
-                                                 @RequestBody OrderParticipantsRequestModel orderParticipantsRequestModel) throws Exception {
-        ParticipantOrderDto participantOrderDto = OrderParticipantDtoMapper.convertToOrderParticipantDto(orderParticipantsRequestModel);
+                                                 @RequestBody ParticipantOrderRequestModel participantOrderRequestModel) throws Exception {
+        ParticipantOrderDto participantOrderDto = OrderParticipantDtoMapper.convertToOrderParticipantDto(participantOrderRequestModel);
         participantOrderDto.setOrderId(id);
         OrderDto orderDto = orderService.updateOrderParticipants(participantOrderDto);
         ModelMapper modelMapper = new ModelMapper();

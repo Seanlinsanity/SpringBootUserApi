@@ -54,15 +54,6 @@ public class OrderServiceImpl implements OrderService {
         }
         orderEntity.setOwner(ownerEntity);
 
-//        List<UserEntity> participants = order.getParticipantOrders().stream().map(orderParticipantDto -> {
-//            UserEntity participantEntity = userRepository.findByUserId(orderParticipantDto.getUserId());
-//            if (participantEntity == null) {
-//                throw new UsernameNotFoundException("Order participant not found: " + orderParticipantDto.getUserId());
-//            }
-//            return participantEntity;
-//        }).collect(Collectors.toList());
-//        orderEntity.setParticipants(participants);
-
         List<ParticipantOrderEntity> participantOrders = order.getParticipantOrders().stream().map(participantOrderDto -> {
             ParticipantOrderEntity participantOrderEntity = new ParticipantOrderEntity();
             participantOrderEntity.setParentOrder(orderEntity);
@@ -118,8 +109,6 @@ public class OrderServiceImpl implements OrderService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("Participant not found, id: " + participantOrderDto.getUserId());
         }
-
-        int result = orderRepository.addNewParticipantForOrder(orderEntity.getId(), userEntity.getId());
 
         ParticipantOrderEntity participantOrderEntity = new ParticipantOrderEntity();
         participantOrderEntity.setIdentity(publicIdGenerator.generateOrderId(30));

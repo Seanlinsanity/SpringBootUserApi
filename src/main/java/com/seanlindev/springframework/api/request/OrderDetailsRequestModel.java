@@ -1,18 +1,14 @@
 package com.seanlindev.springframework.api.request;
 
-import com.seanlindev.springframework.api.dto.OrderDto;
-import com.seanlindev.springframework.api.dto.UserDto;
-import org.aspectj.weaver.ast.Or;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderDetailsRequestModel {
     private String productName;
     private Integer quantity;
     private String owner;
-    private List<OrderParticipantsRequestModel> participants = new ArrayList<>();
+    private List<ParticipantOrderRequestModel> participants = new ArrayList<>();
+    private List<OrderItemRequestModel> items = new ArrayList<>();
 
     public String getProductName() {
         return productName;
@@ -38,11 +34,19 @@ public class OrderDetailsRequestModel {
         this.owner = owner;
     }
 
-    public List<OrderParticipantsRequestModel> getParticipants() {
+    public List<ParticipantOrderRequestModel> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<OrderParticipantsRequestModel> participants) {
+    public void setParticipants(List<ParticipantOrderRequestModel> participants) {
         this.participants = participants;
+    }
+
+    public List<OrderItemRequestModel> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemRequestModel> items) {
+        this.items = items;
     }
 }

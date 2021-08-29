@@ -34,8 +34,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<OrderEntity> ownedOrders;
 
-    @ManyToMany(mappedBy = "participants")
-    private List<OrderEntity> participatingOrders;
+//    @ManyToMany(mappedBy = "participants")
+//    private List<OrderEntity> participatingOrders;
 
     public Long getId() {
         return id;
@@ -117,11 +117,11 @@ public class UserEntity {
         this.ownedOrders = ownedOrders;
     }
 
-    public List<OrderEntity> getParticipatingOrders() {
-        return participatingOrders;
-    }
-
-    public void setParticipatingOrders(List<OrderEntity> participatingOrders) {
-        this.participatingOrders = participatingOrders;
-    }
+//    public List<OrderEntity> getParticipatingOrders() {
+//        return participatingOrders;
+//    }
+//
+//    public void setParticipatingOrders(List<OrderEntity> participatingOrders) {
+//        this.participatingOrders = participatingOrders;
+//    }
 }
