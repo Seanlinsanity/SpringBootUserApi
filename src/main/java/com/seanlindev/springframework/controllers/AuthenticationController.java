@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    @ApiOperation("User login")
+    @ApiOperation(value = "User login service end point",
+                  notes = "Provide user credentials info to login service")
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Response Headers",

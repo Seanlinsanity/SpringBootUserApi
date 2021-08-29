@@ -5,9 +5,14 @@ import com.seanlindev.springframework.model.entities.ProductEntity;
 import com.seanlindev.springframework.repositories.ProductRepository;
 import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -47,4 +52,17 @@ public class ProductServiceImpl implements ProductService{
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(productEntity, ProductDto.class);
     }
+
+    @Override
+    public List<ProductDto> getProducts(int page, int limit) {
+        if (page > 0)
+            page = page - 1;
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Pageable pageable = pageRequest.toOptional().get();
+        Page<ProductEntity> productsPage = productRepository.findAll(pageable);
+        return productsPage.get().map(productEntity -> {
+            ModelMapper modelMapper = new ModelMapper();
+            ProductDto productDto = modelMapper.map(productEntity, ProductDto.class);
+            return productDto;
+        }).collect(Collectors.toList());    }
 }

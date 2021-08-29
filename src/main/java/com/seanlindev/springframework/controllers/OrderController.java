@@ -15,6 +15,7 @@ import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.services.OrderService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @ApiOperation(value = "Create a new order service end point",
+                  notes = "Provide order details in request body to create a new order")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -42,6 +45,8 @@ public class OrderController {
         return modelMapper.map(createdOrderDto, OrderResponse.class);
     }
 
+    @ApiOperation(value = "Get an order details service end point",
+                  notes = "Specify order public id in URL path to get the order info")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -52,6 +57,8 @@ public class OrderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
+    @ApiOperation(value = "Join an order to become a participant service end point",
+                  notes = "Specify order public id in URL path and provide participant details in request body to add new participant")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -65,6 +72,9 @@ public class OrderController {
         return modelMapper.map(orderDto, OrderResponse.class);
     }
 
+    @ApiOperation(value = "Update an order status service end point",
+                  notes = "Specify order public id in URL path and provide new status in request body to update order status. " +
+                          "The status value can be 'CREATED', 'PAID', 'CANCELLED'")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -84,6 +94,8 @@ public class OrderController {
         }
     }
 
+    @ApiOperation(value = "Delete an order service end point",
+                  notes = "Specify order public id in URL path to delete an order")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })

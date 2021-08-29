@@ -35,8 +35,8 @@ public class UserController {
         this.orderService = orderService;
     }
 
-    @ApiOperation(value = "Get user details service end point",
-                  notes = "Specify user public id in URL path. For example: /users/abcdefg123456")
+    @ApiOperation(value = "Get a user details service end point",
+                  notes = "Specify user public id in URL path to get the user info. For example: /users/abcdefg123456")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -48,6 +48,8 @@ public class UserController {
         return userResponse;
     }
 
+    @ApiOperation(value = "Create a new user service end point",
+                  notes = "Provide user credentials info and profile details in request body to create a new user")
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -63,6 +65,8 @@ public class UserController {
         return userResponse;
     }
 
+    @ApiOperation(value = "Update an existed user details service end point",
+                  notes = "Provide user details in request body to update an existed user info")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -83,6 +87,8 @@ public class UserController {
         return userResponse;
     }
 
+    @ApiOperation(value = "Delete an existed user service end point",
+                  notes = "Specify user public id in URL path to delete an user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -97,6 +103,8 @@ public class UserController {
         return statusModel;
     }
 
+    @ApiOperation(value = "Get the user list service end point",
+                  notes = "This API supports page and limit as parameter to get user list")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -111,6 +119,8 @@ public class UserController {
                 }).collect(Collectors.toList());
     }
 
+    @ApiOperation(value = "Get the user address details service end point",
+                  notes = "Specify user public id in URL path to get an user address info")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
@@ -123,6 +133,8 @@ public class UserController {
         return modelMapper.map(userDto.getAddresses(), listType);
     }
 
+    @ApiOperation(value = "Get orders which is owned by an user service end point",
+                  notes = "Specify user public id in URL path to get orders which a user owns")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
     })
