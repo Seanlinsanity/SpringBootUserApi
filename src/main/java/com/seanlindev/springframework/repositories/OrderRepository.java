@@ -16,12 +16,10 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
     List<OrderEntity> findAllByOwnerId(@Param("ownerId") Long ownerId);
 
     @Modifying
-    @Transactional
     @Query(value = "insert into order_participant (order_id, user_id) values (:orderId, :userId)", nativeQuery = true)
     int addNewParticipantForOrder(@Param("orderId") Long orderId, @Param("userId") Long userId);
 
     @Modifying
-    @Transactional
     @Query(value = "update orders o set quantity = :quantity where o.id = :orderId", nativeQuery = true)
     void updateOrderQuantity(@Param("orderId") Long orderId, @Param("quantity") Integer quantity);
 
