@@ -1,7 +1,9 @@
 package com.seanlindev.springframework.services;
 
+import com.seanlindev.springframework.api.dto.AddressDTO;
 import com.seanlindev.springframework.api.dto.OrderDto;
 import com.seanlindev.springframework.api.dto.ParticipantOrderDto;
+import com.seanlindev.springframework.api.dto.ShipmentDto;
 import com.seanlindev.springframework.exceptions.OrderServiceException;
 import com.seanlindev.springframework.model.OrderStatus;
 import com.seanlindev.springframework.model.entities.OrderEntity;
@@ -15,6 +17,7 @@ import com.seanlindev.springframework.repositories.UserRepository;
 import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,17 +34,20 @@ public class OrderServiceImpl implements OrderService {
     UserRepository userRepository;
     ProductRepository productRepository;
     PublicIdGenerator publicIdGenerator;
+    ShipmentService shipmentService;
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             ParticipantOrderRepository participantOrderRepository,
                             UserRepository userRepository,
                             ProductRepository productRepository,
-                            PublicIdGenerator publicIdGenerator) {
+                            PublicIdGenerator publicIdGenerator,
+                            ShipmentService shipmentService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.publicIdGenerator = publicIdGenerator;
         this.participantOrderRepository = participantOrderRepository;
+        this.shipmentService = shipmentService;
     }
 
     @Override
@@ -80,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity savedOrder = orderRepository.save(orderEntity);
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(savedOrder, OrderDto.class);
     }
 
@@ -90,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
         }
         List<OrderEntity> orderEntityList = orderRepository.findAllByOwnerId(userEntity.getId());
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Type listType = new TypeToken<List<OrderDto>>() {}.getType();
         return modelMapper.map(orderEntityList, listType);
     }
@@ -100,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderServiceException("Order not found, order: " + orderId);
         }
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper.map(orderEntity, OrderDto.class);
     }
 
@@ -132,12 +141,36 @@ public class OrderServiceImpl implements OrderService {
         participantOrderRepository.save(participantOrderEntity);
 
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
         return orderDto;
     }
 
-    @Transactional
     @Override
+    public OrderDto changeOrderStatus(OrderDto orderDto) {
+        OrderDto updatedOrder = updateOrderStatus(orderDto);
+        if (updatedOrder.getStatus() == OrderStatus.PAID) {
+            //REQUEST A SHIPMENT
+            ShipmentDto shipmentDto = new ShipmentDto();
+            shipmentDto.setOrderId(updatedOrder.getOrderId());
+            shipmentDto.setRecipient(updatedOrder.getOwner().getFirstName() + " " + updatedOrder.getOwner().getLastName());
+            AddressDTO addressDTO = updatedOrder.getOwner().getAddresses().stream().filter(address -> {
+                return address.getType().equals("shipping");
+            }).findFirst().get();
+            String address = addressDTO.getCountry() + " " + addressDTO.getPostalCode() + " " + addressDTO.getCity() + " " + addressDTO.getStreetName();
+            shipmentDto.setAddress(address);
+
+            try {
+                String shipmentId = shipmentService.createShipment(shipmentDto);
+                updatedOrder.setShipmentId(shipmentId);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        return updatedOrder;
+    }
+
+    @Transactional
     public OrderDto updateOrderStatus(OrderDto orderDto) {
         OrderEntity orderEntity = orderRepository.findByOrderIdForUpdate(orderDto.getOrderId());
         if (orderEntity == null) {
@@ -155,6 +188,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orderEntity);
 
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         OrderDto updatedOrderDto = modelMapper.map(orderEntity, OrderDto.class);
         return updatedOrderDto;
     }

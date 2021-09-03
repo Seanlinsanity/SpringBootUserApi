@@ -86,7 +86,7 @@ public class OrderController {
         try {
             OrderStatus status = OrderStatus.valueOf(orderStatusRequestModel.getStatus());
             orderDto.setStatus(status);
-            OrderDto resultOrderDto = orderService.updateOrderStatus(orderDto);
+            OrderDto resultOrderDto = orderService.changeOrderStatus(orderDto);
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(resultOrderDto, OrderResponse.class);
         } catch (IllegalArgumentException e) {

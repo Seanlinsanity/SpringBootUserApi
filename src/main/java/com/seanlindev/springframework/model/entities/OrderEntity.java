@@ -42,6 +42,9 @@ public class OrderEntity {
     @Column(nullable = false)
     private OrderStatus status;
 
+    @Column(nullable = true)
+    private String shipmentId;
+
     public Long getId() {
         return id;
     }
@@ -104,5 +107,13 @@ public class OrderEntity {
 
     public void setItems(List<ProductEntity> items) {
         this.items = items;
+    }
+
+    public String getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(String shipmentId) {
+        this.shipmentId = shipmentId;
     }
 }

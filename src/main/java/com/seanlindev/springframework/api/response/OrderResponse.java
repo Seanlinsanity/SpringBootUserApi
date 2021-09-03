@@ -14,6 +14,7 @@ public class OrderResponse {
     private UserResponse owner;
     private List<OrderItemDto> items;
     private OrderStatus status;
+    private String shipmentId;
 
     @JsonProperty("participant_orders")
     private List<ParticipantOrderResponse> participantOrders = new ArrayList<>();
@@ -72,5 +73,13 @@ public class OrderResponse {
 
     public void setItems(List<OrderItemDto> items) {
         this.items = items;
+    }
+
+    public String getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(String shipmentId) {
+        this.shipmentId = shipmentId;
     }
 }

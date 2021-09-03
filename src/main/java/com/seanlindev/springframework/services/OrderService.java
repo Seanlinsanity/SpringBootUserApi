@@ -10,6 +10,6 @@ public interface OrderService {
     List<OrderDto> getOrdersByOwnerId(String ownerId);
     OrderDto findByOrderId(String orderId);
     OrderDto updateOrderParticipants(ParticipantOrderDto participantOrderDto);
-    OrderDto updateOrderStatus(OrderDto orderDto);
+    OrderDto changeOrderStatus(OrderDto orderDto);
     Boolean deleteOrderByOrderId(String orderId);
 }
