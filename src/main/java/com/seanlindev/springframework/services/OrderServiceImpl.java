@@ -150,22 +150,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto changeOrderStatus(OrderDto orderDto) {
         OrderDto updatedOrder = updateOrderStatus(orderDto);
         if (updatedOrder.getStatus() == OrderStatus.PAID) {
-            //REQUEST A SHIPMENT
-            ShipmentDto shipmentDto = new ShipmentDto();
-            shipmentDto.setOrderId(updatedOrder.getOrderId());
-            shipmentDto.setRecipient(updatedOrder.getOwner().getFirstName() + " " + updatedOrder.getOwner().getLastName());
-            AddressDTO addressDTO = updatedOrder.getOwner().getAddresses().stream().filter(address -> {
-                return address.getType().equals("shipping");
-            }).findFirst().get();
-            String address = addressDTO.getCountry() + " " + addressDTO.getPostalCode() + " " + addressDTO.getCity() + " " + addressDTO.getStreetName();
-            shipmentDto.setAddress(address);
-
-            try {
-                String shipmentId = shipmentService.createShipment(shipmentDto);
-                updatedOrder.setShipmentId(shipmentId);
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
-            }
+            requestCreatingShipment(updatedOrder);
+        } else if (updatedOrder.getStatus() == OrderStatus.CANCELLED && updatedOrder.getShipmentId() != null) {
+            requestCancelShipment(updatedOrder.getShipmentId());
         }
         return updatedOrder;
     }
@@ -181,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (orderDto.getStatus() == OrderStatus.CANCELLED && orderEntity.getStatus() == OrderStatus.CANCELLED
-            || orderDto.getStatus() == OrderStatus.CREATED) {
+                || orderDto.getStatus() == OrderStatus.CREATED) {
             throw new OrderServiceException("Invalid order paid status change, order: " + orderDto.getOrderId());
         }
         orderEntity.setStatus(orderDto.getStatus());
@@ -193,6 +180,32 @@ public class OrderServiceImpl implements OrderService {
         return updatedOrderDto;
     }
 
+    private void requestCreatingShipment(OrderDto orderDto) {
+        ShipmentDto shipmentDto = new ShipmentDto();
+        shipmentDto.setOrderId(orderDto.getOrderId());
+        shipmentDto.setRecipient(orderDto.getOwner().getFirstName() + " " + orderDto.getOwner().getLastName());
+        AddressDTO addressDTO = orderDto.getOwner().getAddresses().stream().filter(address -> {
+            return address.getType().equals("shipping");
+        }).findFirst().get();
+        String address = addressDTO.getPostalCode() + ", " + addressDTO.getCountry() + ", " + addressDTO.getCity() + ", " + addressDTO.getStreetName();
+        shipmentDto.setAddress(address);
+        try {
+            ShipmentDto shipment = shipmentService.createShipment(shipmentDto);
+            updateOrderShipmentId(orderDto.getOrderId(), shipment.getShipmentId());
+            orderDto.setShipmentId(shipment.getShipmentId());
+        } catch (Exception e) {
+            throw new OrderServiceException("Failed to request a shipment for this order, error: " + e.getMessage());
+        }
+    }
+
+    private void requestCancelShipment(String shipmentId) {
+        try {
+            ShipmentDto shipment = shipmentService.cancelShipment(shipmentId);
+        } catch (Exception e) {
+            throw new OrderServiceException("Failed to cancel the shipment for this order, error: " + e.getMessage());
+        }
+    }
+
     @Override
     public Boolean deleteOrderByOrderId(String orderId) {
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
@@ -201,5 +214,34 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRepository.delete(orderEntity);
         return true;
+    }
+
+    private void updateOrderShipmentId(String orderId, String shipmentId) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new OrderServiceException("Order not found: " + orderId);
+        }
+        orderEntity.setShipmentId(shipmentId);
+        orderRepository.save(orderEntity);
+    }
+
+    @Override
+    public ShipmentDto getOrderShipmentDetails(String orderId) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new OrderServiceException("Order not found: " + orderId);
+        }
+
+        String shipmentId = orderEntity.getShipmentId();
+        if (shipmentId == null) {
+            throw new OrderServiceException("Shipment not found: " + orderId);
+        }
+
+        try {
+            ShipmentDto shipment = shipmentService.getShipmentDetails(shipmentId);
+            return shipment;
+        } catch (Exception e) {
+            throw new OrderServiceException("Failed to request a shipment for this order, error: " + e.getMessage());
+        }
     }
 }

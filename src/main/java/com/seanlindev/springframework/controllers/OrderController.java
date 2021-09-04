@@ -2,6 +2,7 @@ package com.seanlindev.springframework.controllers;
 
 import com.seanlindev.springframework.api.dto.OrderDto;
 import com.seanlindev.springframework.api.dto.ParticipantOrderDto;
+import com.seanlindev.springframework.api.dto.ShipmentDto;
 import com.seanlindev.springframework.api.dto.mapper.OrderDtoMapper;
 import com.seanlindev.springframework.api.dto.mapper.OrderParticipantDtoMapper;
 import com.seanlindev.springframework.api.request.OrderDetailsRequestModel;
@@ -35,7 +36,7 @@ public class OrderController {
     @ApiOperation(value = "Create a new order service end point",
                   notes = "Provide order details in request body to create a new order")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
     })
     @PostMapping
     public OrderResponse createNewOrder(@RequestBody OrderDetailsRequestModel orderDetails) throws Exception {
@@ -48,7 +49,7 @@ public class OrderController {
     @ApiOperation(value = "Get an order details service end point",
                   notes = "Specify order public id in URL path to get the order info")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
     })
     @GetMapping("/{id}")
     public OrderResponse getOrderById(@PathVariable String id) {
@@ -60,7 +61,7 @@ public class OrderController {
     @ApiOperation(value = "Join an order to become a participant service end point",
                   notes = "Specify order public id in URL path and provide participant details in request body to add new participant")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
     })
     @PutMapping("/{id}/participants")
     public OrderResponse updateOrderParticipants(@PathVariable String id,
@@ -76,7 +77,7 @@ public class OrderController {
                   notes = "Specify order public id in URL path and provide new status in request body to update order status. " +
                           "The status value can be 'CREATED', 'PAID', 'CANCELLED'")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
     })
     @PutMapping("/{id}/status")
     public OrderResponse updateOrderStatus(@PathVariable String id,
@@ -97,7 +98,7 @@ public class OrderController {
     @ApiOperation(value = "Delete an order service end point",
                   notes = "Specify order public id in URL path to delete an order")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "hearder")
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<OperationStatusModel> deleteOrder(@PathVariable String id) throws Exception {
@@ -111,6 +112,16 @@ public class OrderController {
             statusModel.setOperationResult(RequestOperationStatus.FAIL.name());
             return new ResponseEntity<>(statusModel, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @ApiOperation(value = "Get an order shipment details end point",
+                  notes = "Specify order public id in URL path to get shipment details")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value= "Bearer JWT Token", paramType = "header")
+    })
+    @GetMapping("/{id}/shipment")
+    public ShipmentDto getOrderShipmentDetails(@PathVariable String id) throws Exception {
+        return orderService.getOrderShipmentDetails(id);
     }
 
 }

@@ -1,22 +1,39 @@
 package com.seanlindev.springframework.services;
 
 import com.seanlindev.springframework.api.dto.ShipmentDto;
-import com.seanlindev.springframework.providers.ShipmentServiceProvider;
+import com.seanlindev.springframework.providers.ShipmentProvider;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
-    private final ShipmentServiceProvider shipmentServiceProvider;
+    private final ShipmentProvider shipmentProvider;
 
-    public ShipmentServiceImpl(ShipmentServiceProvider shipmentServiceProvider) {
-        this.shipmentServiceProvider = shipmentServiceProvider;
+    public ShipmentServiceImpl(ShipmentProvider shipmentProvider) {
+        this.shipmentProvider = shipmentProvider;
     }
 
     @Override
-    public String createShipment(ShipmentDto shipmentDto) throws Exception {
+    public ShipmentDto createShipment(ShipmentDto shipmentDto) throws Exception {
         try {
-            String shipmentId = shipmentServiceProvider.requestCreateShipment(shipmentDto);
-            return shipmentId;
+            return shipmentProvider.requestCreateShipment(shipmentDto);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public ShipmentDto getShipmentDetails(String shipmentId) throws Exception {
+        try {
+            return shipmentProvider.getShipmentDetails(shipmentId);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public ShipmentDto cancelShipment(String shipmentId) throws Exception {
+        try {
+            return shipmentProvider.cancelShipment(shipmentId);
         } catch (Exception e) {
             throw e;
         }

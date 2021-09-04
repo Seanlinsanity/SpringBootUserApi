@@ -12,4 +12,16 @@ public class AppProperties {
     public String getTokenSecret() {
         return env.getProperty("tokenSecret");
     }
+
+    public String getShipmentServerUrl() {
+        return env.getProperty("shipment.server.url");
+    }
+
+    public String getShipmentAccessKey() {
+        return env.getProperty("shipment.access.key");
+    }
+
+    public String getShipmentAccessSecret() {
+        return env.getProperty("shipment.access.secret");
+    }
 }
