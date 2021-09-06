@@ -18,6 +18,10 @@ import com.seanlindev.springframework.shared.utils.PublicIdGenerator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@CacheConfig(cacheNames={"orders"}, cacheManager = "cacheManager")
 public class OrderServiceImpl implements OrderService {
 
     OrderRepository orderRepository;
@@ -102,6 +107,7 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(orderEntityList, listType);
     }
 
+    @Cacheable(key="#orderId")
     public OrderDto findByOrderId(String orderId) {
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
         if (orderEntity == null) {
@@ -114,6 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
+    @CachePut( key="#participantOrderDto.orderId")
     public OrderDto updateOrderParticipants(ParticipantOrderDto participantOrderDto) {
         OrderEntity orderEntity = orderRepository.findByOrderIdForShare(participantOrderDto.getOrderId());
         if (orderEntity == null) {
@@ -147,6 +154,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CachePut( key="#orderDto.orderId")
     public OrderDto changeOrderStatus(OrderDto orderDto) {
         OrderDto updatedOrder = updateOrderStatus(orderDto);
         if (updatedOrder.getStatus() == OrderStatus.PAID) {
@@ -207,6 +215,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CacheEvict( key="#orderId")
     public Boolean deleteOrderByOrderId(String orderId) {
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
         if (orderEntity == null) {

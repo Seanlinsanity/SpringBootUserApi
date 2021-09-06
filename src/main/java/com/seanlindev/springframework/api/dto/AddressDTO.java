@@ -1,6 +1,8 @@
 package com.seanlindev.springframework.api.dto;
 
-public class AddressDTO {
+import java.io.Serializable;
+
+public class AddressDTO implements Serializable {
     private long id;
     private String addressId;
     private String city;

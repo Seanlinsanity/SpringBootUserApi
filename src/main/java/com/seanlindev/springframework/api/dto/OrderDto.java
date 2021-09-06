@@ -3,10 +3,11 @@ package com.seanlindev.springframework.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seanlindev.springframework.model.OrderStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDto {
+public class OrderDto implements Serializable {
     private String id;
     private String orderId;
     private String title;

@@ -1,8 +1,9 @@
 package com.seanlindev.springframework.api.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class OrderItemDto {
+public class OrderItemDto implements Serializable {
     private String productId;
     private String name;
     private BigDecimal price;

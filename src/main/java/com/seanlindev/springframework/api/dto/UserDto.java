@@ -1,9 +1,10 @@
 package com.seanlindev.springframework.api.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDto {
+public class UserDto implements Serializable {
     private Long id;
     private String userId;
     private String firstName;

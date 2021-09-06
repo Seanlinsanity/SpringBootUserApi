@@ -1,6 +1,8 @@
 package com.seanlindev.springframework.api.dto;
 
-public class ParticipantOrderDto {
+import java.io.Serializable;
+
+public class ParticipantOrderDto implements Serializable {
     private String identity;
     private String orderId;
     private String userId;

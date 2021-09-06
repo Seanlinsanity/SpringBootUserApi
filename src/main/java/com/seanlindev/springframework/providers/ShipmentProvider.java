@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import javax.crypto.Mac;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
@@ -15,7 +16,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
 
-@Component
+@Service
 public class ShipmentProvider {
 
     public ShipmentDto requestCreateShipment(ShipmentDto shipmentDto) throws Exception {
