@@ -56,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CachePut( key="#order.orderId")
     public OrderDto createOrder(OrderDto order) {
         order.setOrderId(publicIdGenerator.generateOrderId(30));
         OrderEntity orderEntity = new OrderEntity();
