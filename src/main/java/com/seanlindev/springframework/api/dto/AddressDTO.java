@@ -1,5 +1,7 @@
 package com.seanlindev.springframework.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.io.Serializable;
 
 public class AddressDTO implements Serializable {
@@ -10,6 +12,7 @@ public class AddressDTO implements Serializable {
     private String streetName;
     private String postalCode;
     private String type;
+    @JsonBackReference
     private UserDto userDetails;
 
     public long getId() {

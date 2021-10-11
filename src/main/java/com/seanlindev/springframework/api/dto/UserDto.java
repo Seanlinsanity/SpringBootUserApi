@@ -1,5 +1,7 @@
 package com.seanlindev.springframework.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ public class UserDto implements Serializable {
     private String encryptedPassword;
     private String emailVerificationToken;
     private Boolean emailVerificationStatus = false;
+    @JsonManagedReference
     private List<AddressDTO> addresses = new ArrayList<>();
 
     public Long getId() {

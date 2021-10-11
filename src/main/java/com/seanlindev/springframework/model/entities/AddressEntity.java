@@ -1,5 +1,6 @@
 package com.seanlindev.springframework.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.seanlindev.springframework.api.dto.UserDto;
 
 import javax.persistence.*;
